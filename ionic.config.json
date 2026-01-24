@@ -1,0 +1,7 @@
+{
+  "name": "isymphony-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite"
+}

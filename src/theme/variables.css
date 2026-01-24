@@ -1,0 +1,50 @@
+/* Light Mode (default) */
+:root {
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+
+  --ion-text-color: #000000;
+  --ion-text-color-rgb: 0, 0, 0;
+
+  /* ===== Toolbar (Header) — make it purple ===== */
+  --ion-toolbar-background: #8e24aa;   /* tím */
+  --ion-toolbar-color: #ffffff;        /* chữ & icon white */
+
+  /* List items */
+  --ion-item-background: #ffffff;
+  --ion-item-color: #000000;
+
+  --avatar-bg: #C7A4FF; /* light purple */
+
+  --ion-safe-area-top: env(safe-area-inset-top);
+  --ion-safe-area-bottom: env(safe-area-inset-bottom);
+}
+
+/* ===== DARK MODE ===== */
+html.dark {
+  --ion-background-color: #121212;
+  --ion-background-color-rgb: 18, 18, 18;
+
+  --ion-text-color: #ffffff;
+  --ion-text-color-rgb: 255, 255, 255;
+
+  /* ===== Toolbar (Header) — vẫn tím trong dark mode ===== */
+  --ion-toolbar-background: #8e24aa;
+  --ion-toolbar-color: #ffffff;
+
+  /* Ion items */
+  --ion-item-background: #1f1f1f;
+  --ion-item-color: #ffffff;
+
+  /* Menu background */
+  --ion-menu-background: #1e1e1e;
+
+  --avatar-bg: #9567E0; /* darker purple */
+}
+
+/* Dark mode – stronger modal border */
+html.dark ion-modal {
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: rgba(255, 255, 255, 0.25);
+}
