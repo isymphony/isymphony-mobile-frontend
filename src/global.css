@@ -1,0 +1,19 @@
+/* Global reusable bottom action button */
+.go-bottom-btn {
+  --background: rgb(146, 18, 163);
+  --color: #ffffff;
+  --border-radius: 8px;
+  text-transform: none !important;
+  font-weight: 500;
+}
+
+.go-bottom-btn-outline {
+  --background: transparent;
+  --color: rgb(146, 18, 163);
+  --border-color: rgb(146, 18, 163);
+  --border-width: 2px;
+  --border-style: solid;
+  --border-radius: 12px;
+  text-transform: none !important;
+  font-weight: 500;
+}

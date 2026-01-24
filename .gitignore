@@ -1,0 +1,28 @@
+# Node / Ionic
+node_modules/
+dist/
+www/
+
+# Env
+.env
+.env.*
+.DS_Store
+
+# Capacitor iOS
+ios/App/build/
+ios/App/Pods/
+ios/App/DerivedData/
+ios/App/.xcworkspace
+
+# Capacitor Android
+android/.gradle/
+android/build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+*.pem
+*.key
+
