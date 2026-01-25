@@ -18,17 +18,21 @@
   font-weight: 500;
 }
 
-/* ===== FIX ion-input text color (Light + Dark mode) ===== */
-ion-item {
-  --background: var(--ion-item-background);
-  --color: var(--ion-text-color);
+/* ===== iOS FIX: ion-input text not visible in light mode ===== */
+ion-input::part(native) {
+  color: var(--ion-text-color) !important;
 }
 
-ion-input {
-  --color: var(--ion-text-color);
-  --placeholder-color: rgba(0, 0, 0, 0.4);
+/* Placeholder */
+ion-input::part(native)::placeholder {
+  color: rgba(0, 0, 0, 0.45);
 }
 
-html.dark ion-input {
-  --placeholder-color: rgba(255, 255, 255, 0.5);
+/* Dark mode override */
+html.dark ion-input::part(native) {
+  color: #ffffff !important;
+}
+
+html.dark ion-input::part(native)::placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
