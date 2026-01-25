@@ -17,3 +17,18 @@
   text-transform: none !important;
   font-weight: 500;
 }
+
+/* ===== FIX ion-input text color (Light + Dark mode) ===== */
+ion-item {
+  --background: var(--ion-item-background);
+  --color: var(--ion-text-color);
+}
+
+ion-input {
+  --color: var(--ion-text-color);
+  --placeholder-color: rgba(0, 0, 0, 0.4);
+}
+
+html.dark ion-input {
+  --placeholder-color: rgba(255, 255, 255, 0.5);
+}
