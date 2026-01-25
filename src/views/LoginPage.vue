@@ -173,7 +173,8 @@ const onNext = () => {
 
 .auth-header p {
   margin: 4px 0 0;
-  color: var(--ion-color-medium);
+  color: var(--ion-text-color);
+  opacity: 0.7;
   font-size: 14px;
 }
 
@@ -186,16 +187,22 @@ const onNext = () => {
 .or-separator .line {
   flex: 1;
   height: 1px;
-  background-color: var(--ion-color-medium-tint);
+  background-color: var(--ion-text-color);
+  opacity: 0.2;
 }
 
 .or-separator span {
   margin: 0 8px;
   font-size: 12px;
-  color: var(--ion-color-medium);
+  color: var(--ion-text-color);
+  opacity: 0.6;
 }
 
 .error-text {
   margin-top: 8px;
+}
+
+ion-item ion-label {
+  color: var(--ion-text-color);
 }
 </style>
