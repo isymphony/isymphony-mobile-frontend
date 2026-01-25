@@ -202,7 +202,4 @@ const onNext = () => {
   margin-top: 8px;
 }
 
-ion-item ion-label {
-  color: var(--ion-text-color);
-}
 </style>
