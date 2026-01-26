@@ -36,3 +36,9 @@ html.dark ion-input::part(native) {
 html.dark ion-input::part(native)::placeholder {
   color: rgba(255, 255, 255, 0.5);
 }
+
+/* iOS ion-menu and ion-item*/
+.ios ion-menu ion-item::part(native) {
+  font-size: 0.92rem;
+  font-weight: 500;       
+}
