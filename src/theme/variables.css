@@ -68,3 +68,17 @@ html {
   font-size: 0.9rem;
   line-height: 1.2;
 }
+
+/* =====================================================
+   iOS ONLY: compact menu ion-item to avoid text wrap
+   ===================================================== */
+.ios ion-menu ion-item {
+  --min-height: 44px;          /* default iOS ~50–56px */
+  --padding-start: 12px;       /* default ~16px */
+  --padding-end: 12px;
+}
+
+/* Ensure label stays on one line */
+.ios ion-menu ion-label {
+  white-space: nowrap;
+}
