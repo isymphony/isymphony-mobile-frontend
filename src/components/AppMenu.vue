@@ -390,7 +390,7 @@ const logout = async () => {
 .logo-wrapper {
   padding: 16px;
   display: flex;
-  justify-content: center;
+  margin-top: 30px;
   background: var(--ion-background-color); /* auto light/dark */
   border-bottom: 1px solid var(--ion-color-step-150);
 }
