@@ -457,4 +457,11 @@ const logout = async () => {
 .menu-bottom-spacer {
   height: 50px;
 }
+
+/* iOS menu: make text more compact */
+:host(.ios) ion-item ion-label {
+  font-size: 0.92rem;      /* ~8% smaller */
+  line-height: 1.2;
+  white-space: nowrap;    /* prevent wrapping */
+}
 </style>
