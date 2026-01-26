@@ -24,7 +24,7 @@
 
         <!-- Always show Home -->
         <ion-menu-toggle :auto-hide="true">
-          <ion-item button router-link="/home">
+          <ion-item button router-link="/home" :detail="false">
             <ion-icon slot="start" :icon="homeOutline"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
@@ -36,35 +36,35 @@
 
           <!-- Time Entry (switch based on capture mode) -->
           <ion-menu-toggle v-if="captureMode === 'HOUR ENTRY'" :auto-hide="true">
-            <ion-item button @click="goEntryByType('hourEntry')">
+            <ion-item button @click="goEntryByType('hourEntry')" :detail="false">
               <ion-icon slot="start" :icon="timeOutline"></ion-icon>
               <ion-label>Timesheet Entry</ion-label>
             </ion-item>
           </ion-menu-toggle>
 
           <ion-menu-toggle v-if="captureMode === 'HOUR ENTRY'" :auto-hide="true">
-            <ion-item button router-link="/pending-timesheet">
+            <ion-item button router-link="/pending-timesheet" :detail="false">
               <ion-icon slot="start" :icon="hourglassOutline"></ion-icon>
               <ion-label>Pending Timesheets</ion-label>
             </ion-item>
           </ion-menu-toggle>
 
           <ion-menu-toggle v-if="captureMode === 'CLOCK ENTRY'" :auto-hide="true">
-            <ion-item button @click="goEntryByType('clockEntry')">
+            <ion-item button @click="goEntryByType('clockEntry')" :detail="false">
               <ion-icon slot="start" :icon="timeOutline"></ion-icon>
               <ion-label>Timeclock Entry</ion-label>
             </ion-item>
           </ion-menu-toggle>
 
           <ion-menu-toggle v-if="captureMode === 'CLOCK ENTRY'" :auto-hide="true">
-            <ion-item button router-link="/pending-clock-timesheet">
+            <ion-item button router-link="/pending-clock-timesheet" :detail="false">
               <ion-icon slot="start" :icon="hourglassOutline"></ion-icon>
               <ion-label>Pending Timesheets</ion-label>
             </ion-item>
           </ion-menu-toggle>
 
           <ion-menu-toggle :auto-hide="true">
-            <ion-item button router-link="/approved-timesheets">
+            <ion-item button router-link="/approved-timesheets" :detail="false">
               <ion-icon slot="start" :icon="checkmarkDoneOutline"></ion-icon>
               <ion-label>Approved Timesheets</ion-label>
             </ion-item>
@@ -78,14 +78,14 @@
         <template v-if="mode === 'EXPENSE_ONLY' || mode === 'BOTH'">
 
           <ion-menu-toggle :auto-hide="true">
-            <ion-item button @click="underConstruction">
+            <ion-item button @click="underConstruction" :detail="false">
               <ion-icon slot="start" :icon="cashOutline"></ion-icon>
               <ion-label>Expense Entry</ion-label>
             </ion-item>
           </ion-menu-toggle>
 
           <ion-menu-toggle :auto-hide="true">
-            <ion-item button router-link="/approved-expenses">
+            <ion-item button router-link="/approved-expenses" :detail="false">
               <ion-icon slot="start" :icon="pricetagOutline"></ion-icon>
               <ion-label>Approved Expenses</ion-label>
             </ion-item>
@@ -96,7 +96,7 @@
         <!-- PTO (only if iu_ptoflag = 1) -->
         <template v-if="showPTO">
           <ion-menu-toggle :auto-hide="true">
-            <ion-item button router-link="/my-pto">
+            <ion-item button router-link="/my-pto" :detail="false">
               <ion-icon slot="start" :icon="calendarOutline"></ion-icon>
               <ion-label>My PTO</ion-label>
             </ion-item>
@@ -105,7 +105,7 @@
 
         <!-- My Profile always visible -->
         <ion-menu-toggle :auto-hide="true">
-          <ion-item button router-link="/my-profile">
+          <ion-item button router-link="/my-profile" :detail="false">
             <ion-icon slot="start" :icon="personCircleOutline"></ion-icon>
             <ion-label>My Profile</ion-label>
           </ion-item>
@@ -113,7 +113,7 @@
 
         <!-- Logout -->
         <ion-menu-toggle :auto-hide="true">
-          <ion-item button @click="logout">
+          <ion-item button @click="logout" :detail="false">
             <ion-icon slot="start" :icon="logOutOutline"></ion-icon>
             <ion-label color="danger">Logout</ion-label>
           </ion-item>
