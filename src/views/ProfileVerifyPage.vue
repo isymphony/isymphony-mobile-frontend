@@ -36,7 +36,7 @@
         <ion-label position="stacked">ZIP Code</ion-label>
         <ion-input
           v-model="zipCode"
-          type="text"
+          type="number"
           placeholder="ZIP / Postal Code"
         />
       </ion-item>
