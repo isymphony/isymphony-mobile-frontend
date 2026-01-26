@@ -1,6 +1,6 @@
 /* Light Mode (default) */
 :root {
-  --ion-background-color: #ffffff;
+  --ion-background-color: #ffffff ;
   --ion-background-color-rgb: 255, 255, 255;
 
   --ion-text-color: #000000;
@@ -47,4 +47,13 @@ html.dark ion-modal {
   --border-width: 1px;
   --border-style: solid;
   --border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* 🔥 Kill iOS auto dark via media query */
+@media (prefers-color-scheme: dark) {
+  :root:not(.dark) {
+    --ion-background-color: #ffffff !important;
+    --ion-text-color: #000000 !important;
+    --ion-item-background: #ffffff !important;
+  }
 }
