@@ -64,7 +64,7 @@ html {
 }
 
 /* Menu + list labels */
-.ios ion-label {
+.ios ion-label ion-menu {
   font-size: 0.9rem;
   line-height: 1.2;
 }
