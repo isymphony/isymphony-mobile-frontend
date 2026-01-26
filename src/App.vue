@@ -21,6 +21,9 @@ import AppMenu from "@/components/AppMenu.vue";
 import { Preferences } from "@capacitor/preferences";
 
 const initTheme = async () => {
+  // 🔥 ALWAYS reset first (kill iOS auto dark)
+  document.documentElement.classList.remove("dark");
+
   const theme = await Preferences.get({ key: "theme" });
 
   if (theme.value === "dark") {

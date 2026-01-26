@@ -229,14 +229,14 @@ const loadMenuData = async () => {
 
   const first = await Preferences.get({ key: "userFirstName" });
   const identity = await Preferences.get({ key: "identityValue" });
-  const dark = await Preferences.get({ key: "darkMode" });
+  const themePref = await Preferences.get({ key: "theme" });
   const sitePref = await Preferences.get({ key: "siteName" });
   const userId = await Preferences.get({ key: "userId" });
   //console.log("🔥 User Info =", first.value, identity.value, dark.value, sitePref.value, userId.value);
 
   firstName.value = first.value || "";
   identityValue.value = identity.value || "";
-  darkMode.value = dark.value === "true";
+    darkMode.value = themePref.value === "dark";
 
   document.documentElement.classList.toggle("dark", darkMode.value);
 
@@ -335,11 +335,11 @@ const toggleDarkMode = async () => {
   darkMode.value = newValue;
 
   await Preferences.set({
-    key: "darkMode",
-    value: newValue ? "true" : "false"
+    key: "theme",
+    value: newValue ? "dark" : "light"
   });
 
-  document.documentElement.classList.toggle("dark", newValue);
+  document.documentElement.classList.toggle("dark", newValue);  
 };
 
 // Placeholder under-construction popup
