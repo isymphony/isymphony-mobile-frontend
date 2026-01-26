@@ -64,3 +64,17 @@ ion-toggle {
   --background-focused: #8e24aa;
   --background-hover: #8e24aa;
 }
+
+/* LIGHT MODE */
+.ios:not(.dark) ion-loading {
+  --background: #ffffff;
+  --spinner-color: #8e24aa;   /* brand purple */
+  --color: #000000;
+}
+
+/* DARK MODE (keep default, but explicit) */
+.ios.dark ion-loading {
+  --background: #1c1c1e;
+  --spinner-color: #ffffff;
+  --color: #ffffff;
+}
