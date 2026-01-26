@@ -25,7 +25,7 @@
       <!-- Weekend row -->
       <ion-list>
 
-        <ion-item v-if="weekend" button :router-link="`/timesheet-clock-detail/${weekend}`">
+        <ion-item v-if="weekend" button :router-link="`/timesheet-clock-detail/${weekend}`" :detail="false">
 
           <ion-label>
             {{ formatWeekend(weekend) }}

@@ -30,6 +30,7 @@
           :key="w.weekend"
           button
           @click="openTimesheet(w.weekend)"
+          :detail="false"
         >
           <ion-label>
             <div class="weekend-line">

@@ -62,6 +62,7 @@
           'today-row': day.isToday,
           'week-ending-row': day.isWeekEnding
           }"
+          :detail="false"
         >
           <ion-label>
             <div class="day-date">{{ day.displayDate }}</div>
