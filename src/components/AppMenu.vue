@@ -462,6 +462,7 @@ const logout = async () => {
 :host(.ios) ion-item ion-label {
   font-size: 0.92rem;      /* ~8% smaller */
   line-height: 1.2;
+  font-weight: 500;
   white-space: nowrap;    /* prevent wrapping */
 }
 </style>
