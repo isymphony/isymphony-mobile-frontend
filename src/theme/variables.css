@@ -62,3 +62,9 @@ html.dark ion-modal {
 html {
   -webkit-text-size-adjust: 100%;
 }
+
+/* Menu + list labels */
+.ios ion-label {
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
