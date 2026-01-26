@@ -55,3 +55,12 @@ ion-toggle {
   --handle-background: #ffffff;
   --handle-background-checked: #ffffff;
 }
+
+/* =====================================================
+   iOS button press color – prevent blue flash
+   ===================================================== */
+.ios ion-button {
+  --background-activated: #8e24aa; /* same as brand purple */
+  --background-focused: #8e24aa;
+  --background-hover: #8e24aa;
+}
