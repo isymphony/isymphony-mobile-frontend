@@ -43,6 +43,11 @@ html.dark ion-input::part(native)::placeholder {
   font-weight: 470;       
 }
 
+ion-toggle {
+  --track-background-checked: #8e24aa;   /* brand purple*/
+  --handle-background-checked: #ffffff;
+}
+
 /* iOS toggle – improve contrast in LIGHT MODE */
 .ios ion-menu ion-toggle {
   --track-background: #d1d1d6;           /* iOS gray  */
