@@ -51,13 +51,16 @@ html.dark ion-input::part(native)::placeholder {
   --inner-padding-start: 8px;
   --padding-start: 12px;
   --padding-end: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /* Label text inside ion-item */
-.ios ion-modal ion-item ion-label::part(native) {
-  font-size: 0.90rem;
-  font-weight: 470;
-  line-height: 1.2;
+.ios ion-modal ion-item ion-label {
+  font-size: 14px !important;   /* 🔥 force */
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
 ion-toggle {
