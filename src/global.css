@@ -43,6 +43,23 @@ html.dark ion-input::part(native)::placeholder {
   font-weight: 470;       
 }
 
+/* ===============================
+   iOS modal ion-item normalization
+   =============================== */
+.ios ion-modal ion-item::part(native) {
+  --inner-padding-end: 8px;
+  --inner-padding-start: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+}
+
+/* Label text inside ion-item */
+.ios ion-modal ion-item ion-label::part(native) {
+  font-size: 0.90rem;
+  font-weight: 470;
+  line-height: 1.2;
+}
+
 ion-toggle {
   --track-background-checked: #8e24aa;   /* brand purple*/
   --handle-background-checked: #ffffff;
