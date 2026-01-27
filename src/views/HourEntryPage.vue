@@ -982,6 +982,11 @@ html.dark .hours-input-item ion-input {
 
 /* Light mode */
 .comments-input-item ion-textarea {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  line-height: 1.4;
   background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -992,14 +997,6 @@ html.dark .hours-input-item ion-input {
 html.dark .comments-input-item ion-textarea {
   background: #1f1f1f;
   border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.comments-input-item ion-textarea {
-  --padding-start: 6px;
-  --padding-end: 6px;
-  --padding-top: 6px;
-  --padding-bottom: 6px;
-  line-height: 1.4;
 }
 
 .modal-actions {
