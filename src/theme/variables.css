@@ -99,7 +99,7 @@ html {
   --padding-start: 14px;
   --padding-end: 14px;
 
-  min-height: 36px;        /* Android-like */
+  min-height: 40px;
   height: auto;
 
   font-size: 16px;
