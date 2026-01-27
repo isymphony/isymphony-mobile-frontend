@@ -102,6 +102,13 @@ html {
   min-height: 36px;        /* Android-like */
   height: auto;
 
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
+}
+
+/* Input visual height normalization */
+.ios ion-input,
+.ios ion-textarea {
+  font-size: 15px;
+  line-height: 1.35;
 }
