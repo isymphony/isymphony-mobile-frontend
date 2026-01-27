@@ -115,3 +115,27 @@ ion-toggle {
   --ion-background-color: #1c1c1e;
   --ion-text-color: #ffffff;
 }
+
+/* ===============================
+   Ionic Alert – LIGHT MODE
+   =============================== */
+html:not(.dark) ion-alert {
+  --background: #ffffff;
+  --color: #000000;
+  --backdrop-opacity: 0.35;
+}
+
+/* Title */
+html:not(.dark) ion-alert .alert-title {
+  color: #000000;
+}
+
+/* Message text */
+html:not(.dark) ion-alert .alert-message {
+  color: #333333;
+}
+
+/* Buttons */
+html:not(.dark) ion-alert .alert-button {
+  color: var(--ion-color-primary);
+}
