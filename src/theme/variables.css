@@ -83,3 +83,9 @@ html {
   white-space: nowrap;
 }
 
+.all-modal-title {
+  font-size: 14px;
+  font-weight: 550;
+  color: var(--ion-text-color);
+  margin-bottom: 14px;
+}
