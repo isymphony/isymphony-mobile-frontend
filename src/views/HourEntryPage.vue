@@ -228,10 +228,10 @@
 
     <!-- ======= ASSIGNMENT MODAL ======= -->
     <ion-modal :is-open="showAssignmentModal" @didDismiss="closeAssignmentModal" class="assignment-modal">
-      <div class="all-modal-title">
-        Choose the Order Number
-      </div>
-      <ion-content>
+      <ion-content class="ion-padding">
+        <div class="all-modal-title">
+          Choose the Order Number
+        </div>
         <ion-list>
           <ion-item
             v-for="asg in assignments"
@@ -256,10 +256,6 @@
           </ion-item>
         </ion-list>
 
-
-      </ion-content>
-
-      <ion-footer>
         <div class="modal-actions">
           <ion-button fill="clear" @click="closeAssignmentModal">
             Cancel
@@ -268,7 +264,9 @@
             OK
           </ion-button>
         </div>
-      </ion-footer>
+
+      </ion-content>
+
     </ion-modal>
 
   </ion-page>
@@ -934,12 +932,6 @@ html.dark .week-list ion-item.week-ending-row {
   text-align: right;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
 .hours-modal-subtitle {
   font-size: 14px;
   color: var(--ion-color-medium);
@@ -1051,16 +1043,6 @@ ion-action-sheet .action-sheet-title {
   --max-width: 90%;
   --height: 420px;
   --border-radius: 16px;
-}
-
-.assignment-modal ion-title {
-  font-size: 15px;     /* default ~20px */
-  font-weight: 400;
-}
-
-.assignment-modal ion-footer ion-toolbar {
-  --background: transparent;
-  --border-width: 0;
 }
 
 .day-actions-modal {
