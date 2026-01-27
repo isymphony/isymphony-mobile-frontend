@@ -171,7 +171,7 @@
     class="comment-modal"
     >
     <ion-content class="ion-padding">
-        <div class="comment-modal-title">
+        <div class="all-modal-title">
             Comments for {{ selectedDayForComment?.display }}
         </div>
 
@@ -201,32 +201,25 @@
     </ion-content>
     </ion-modal>
 
-    <!-- Assignment Modal (REQUIRED when assignment invalid) -->
-    <ion-modal
-      :is-open="showAssignmentModal"
-      @didDismiss="onAssignmentDismiss"
-      class="assignment-modal"
-    >
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Choose the Order Number</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <ion-content>
+    <!-- ======= ASSIGNMENT MODAL ======= -->
+    <ion-modal :is-open="showAssignmentModal" @didDismiss="onAssignmentDismiss" class="assignment-modal">
+      <ion-content class="ion-padding">
+        <div class="all-modal-title">
+          Choose the Order Number
+        </div>
         <ion-list>
           <ion-item
             v-for="asg in assignments"
             :key="asg.assignment_id"
             button
             @click="selectAssignment(asg)"
+            :detail="false"
           >
             <ion-label>
               Order #<strong>{{ asg.order_number }}</strong>
-              <span v-if="asg.type_location"> - {{ asg.type_location }}</span>
-              <div class="asg-dates">
-                {{ asg.start_date }} → {{ asg.end_date ?? "open" }}
-              </div>
+              <span v-if="asg.type_location">
+                - {{ asg.type_location }}
+              </span>
             </ion-label>
 
             <ion-icon
@@ -237,9 +230,7 @@
             />
           </ion-item>
         </ion-list>
-      </ion-content>
 
-      <ion-footer>
         <div class="modal-actions">
           <ion-button fill="clear" @click="closeAssignmentModal">
             Cancel
@@ -248,8 +239,11 @@
             OK
           </ion-button>
         </div>
-      </ion-footer>
+
+      </ion-content>
+
     </ion-modal>
+
   </ion-page>
 </template>
 
@@ -1106,13 +1100,6 @@ ion-button[disabled] {
   color: rgb(146, 18, 163);
   transform: scale(1.15);
   filter: drop-shadow(0 0 2px rgba(146,18,163,0.6));
-}
-
-.comment-modal-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--ion-text-color);
 }
 
 .comment-modal-subtitle {

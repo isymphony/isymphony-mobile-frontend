@@ -168,7 +168,7 @@
 
       <ion-content class="ion-padding">
 
-        <div class="all-action-title">
+        <div class="all-modal-title">
           {{ withdrawMode === 'request'
             ? 'Request to Withdraw PTO'
             : 'Withdraw PTO'
@@ -822,13 +822,6 @@ html.dark .chevron-icon {
   cursor: pointer;
   font-style: normal;
   font-size: 13px;
-}
-
-.all-action-title {
-  font-size: 16px;
-  font-weight: 550;
-  color: var(--ion-text-color);
-  margin-bottom: 14px;
 }
 
 .deletewithdraw-modal {

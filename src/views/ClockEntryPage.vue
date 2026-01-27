@@ -122,19 +122,17 @@
 
     <!-- ======= ASSIGNMENT MODAL ======= -->
     <ion-modal :is-open="showAssignmentModal" @didDismiss="closeAssignmentModal" class="assignment-modal">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Choose the Order Number</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <ion-content>
+      <ion-content class="ion-padding">
+        <div class="all-modal-title">
+          Choose the Order Number
+        </div>
         <ion-list>
           <ion-item
             v-for="asg in assignments"
             :key="asg.assignment_id"
             button
             @click="selectAssignment(asg)"
+            :detail="false"
           >
             <ion-label>
               Order #<strong>{{ asg.order_number }}</strong>
@@ -151,27 +149,20 @@
             />
           </ion-item>
         </ion-list>
+
+        <div class="modal-actions">
+          <ion-button fill="clear" @click="closeAssignmentModal">
+            Cancel
+          </ion-button>
+          <ion-button @click="confirmAssignment">
+            OK
+          </ion-button>
+        </div>
+
       </ion-content>
 
-      <ion-footer>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button color="secondary" @click="closeAssignmentModal">
-              Cancel
-            </ion-button>
-          </ion-buttons>
-
-          <ion-buttons slot="end">
-            <ion-button
-              color="primary"
-              @click="confirmAssignment"
-            >
-              OK
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-footer>
     </ion-modal>
+
   </ion-page>
 
 </template>
@@ -801,17 +792,7 @@ html.dark .change-order-btn {
 .assignment-modal {
   --width: 400px;
   --max-width: 90%;
-  --height: 420px;
+  --height: 220px;
   --border-radius: 16px;
-}
-
-.assignment-modal ion-title {
-  font-size: 15px;     /* default ~20px */
-  font-weight: 400;
-}
-
-.assignment-modal ion-footer ion-toolbar {
-  --background: transparent;
-  --border-width: 0;
 }
 </style>

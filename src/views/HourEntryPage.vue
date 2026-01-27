@@ -106,7 +106,7 @@
       class="day-actions-modal"
     >
       <ion-content class="ion-padding">
-        <div class="all-action-title">
+        <div class="all-modal-title">
           Update hours for {{ selectedDay?.displayDate }}
         </div>
 
@@ -128,7 +128,7 @@
       class="delete-hours-entry-modal"
     >
       <ion-content class="ion-padding">
-        <div class="all-action-title">
+        <div class="all-modal-title">
             Delete hours for {{ selectedDay?.displayDate }}
         </div>
 
@@ -173,7 +173,7 @@
       class="addedit-hours-entry-modal"
     >
       <ion-content class="ion-padding">
-        <div class="all-action-title">
+        <div class="all-modal-title">
           {{ hoursModalTitle }}
         </div>
 
@@ -227,7 +227,7 @@
     </ion-modal>
 
     <!-- ======= ASSIGNMENT MODAL ======= -->
-    <ion-modal :is-open="showAssignmentModal" @didDismiss="closeAssignmentModal" class="assignment-modal">
+    <ion-modal :is-open="showAssignmentModal" presentation="modal" @didDismiss="closeAssignmentModal" class="assignment-modal">
       <ion-content class="ion-padding">
         <div class="all-modal-title">
           Choose the Order Number
@@ -1036,9 +1036,9 @@ ion-action-sheet .action-sheet-title {
 }
 
 .assignment-modal {
-  --width: 400px;
+  --width: 200px;
   --max-width: 90%;
-  --height: 420px;
+  --height: 220px;
   --border-radius: 16px;
 }
 
@@ -1047,13 +1047,6 @@ ion-action-sheet .action-sheet-title {
   --max-width: 92%;
   --height: 150px;
   --border-radius: 16px;
-}
-
-.all-action-title {
-  font-size: 14px;
-  font-weight: 550;
-  color: var(--ion-text-color);
-  margin-bottom: 14px;
 }
 
 .day-actions-list {
