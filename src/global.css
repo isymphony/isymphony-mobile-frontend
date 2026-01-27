@@ -78,3 +78,18 @@ ion-toggle {
   --spinner-color: #ffffff;
   --color: #ffffff;
 }
+
+/* =====================================================
+   iOS modal background fix for light / dark mode
+   ===================================================== */
+/* LIGHT MODE */
+.ios:not(.dark) ion-modal {
+  --background: #ffffff;
+  --color: #000000;
+}
+
+/* DARK MODE */
+.ios.dark ion-modal {
+  --background: #1c1c1e;
+  --color: #ffffff;
+}
