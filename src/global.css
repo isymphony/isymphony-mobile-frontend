@@ -80,16 +80,18 @@ ion-toggle {
 }
 
 /* =====================================================
-   iOS modal background fix for light / dark mode
+   iOS Modal – FORCE light / dark mode correctly
    ===================================================== */
-/* LIGHT MODE */
+/* LIGHT MODE (iOS) */
 .ios:not(.dark) ion-modal {
-  --background: #ffffff;
-  --color: #000000;
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+  --ion-color-step-50: #f2f2f2;
+  --ion-color-step-100: #e6e6e6;
 }
 
-/* DARK MODE */
+/* DARK MODE (iOS) */
 .ios.dark ion-modal {
-  --background: #1c1c1e;
-  --color: #ffffff;
+  --ion-background-color: #1c1c1e;
+  --ion-text-color: #ffffff;
 }
