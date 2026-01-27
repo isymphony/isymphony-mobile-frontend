@@ -799,24 +799,25 @@ html.dark .change-order-btn {
 /* ===============================
    iOS – Today's Punches font fix
    =============================== */
-/* Target actual text node inside ion-label (iOS renders <p>) */
-.ios .punch-list ion-item ion-label p {
-  font-size: 13px;
+/* Target actual rendered text node on iOS */
+.ios ion-list.punch-list ion-item ion-label p {
+  font-size: 13px !important;
   line-height: 1.3;
   margin: 0;
   font-weight: 400;
 }
 
-/* Icon size normalize */
-.ios .punch-list ion-item ion-icon {
-  font-size: 18px;
-}
-
-/* Row height normalize */
-.ios .punch-list ion-item {
+/* Normalize row height */
+.ios ion-list.punch-list ion-item {
   --min-height: 36px;
   --inner-padding-top: 6px;
   --inner-padding-bottom: 6px;
 }
+
+/* Normalize icon size */
+.ios ion-list.punch-list ion-item ion-icon {
+  font-size: 18px;
+}
+
 
 </style>
