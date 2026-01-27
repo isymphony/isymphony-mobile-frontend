@@ -228,12 +228,9 @@
 
     <!-- ======= ASSIGNMENT MODAL ======= -->
     <ion-modal :is-open="showAssignmentModal" @didDismiss="closeAssignmentModal" class="assignment-modal">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>Choose the Order Number</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
+      <div class="all-modal-title">
+        Choose the Order Number
+      </div>
       <ion-content>
         <ion-list>
           <ion-item
@@ -241,6 +238,7 @@
             :key="asg.assignment_id"
             button
             @click="selectAssignment(asg)"
+            :detail="false"
           >
             <ion-label>
               Order #<strong>{{ asg.order_number }}</strong>
