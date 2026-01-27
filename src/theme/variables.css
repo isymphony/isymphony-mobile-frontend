@@ -89,3 +89,20 @@ html {
   color: var(--ion-text-color);
   margin-bottom: 14px;
 }
+
+/* ===============================
+   iOS button height normalization
+   =============================== */
+.ios ion-button {
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+
+  min-height: 36px;        /* Android-like */
+  height: auto;
+
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;   /* iOS uppercase looks bulky */
+}
