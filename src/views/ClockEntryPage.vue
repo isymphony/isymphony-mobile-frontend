@@ -693,7 +693,7 @@ html.dark .top-card {
 /* ----- Today's Punches styling ----- */
 
 ion-item {
-  --min-height: 36px;      /* giảm height mỗi row */
+  --min-height: 36px;
   --padding-start: 10px;
   --padding-end: 10px;
   --inner-padding-end: 6px;
@@ -705,12 +705,20 @@ html.dark ion-item {
 }
 
 ion-item ion-icon {
-  font-size: 18px;        /* icon nhỏ lại */
+  font-size: 18px;
   margin-right: 6px;
 }
 
-ion-item ion-label {
-  font-size: 13px;        /* text nhỏ hơn */
+/* iOS punch-text*/
+.ios ion-list.punch-list ion-label.punch-text {
+  font-size: 13px !important;
+  line-height: 1.3;
+  font-weight: 400;
+}
+/* Android (MD mode) */
+.md ion-list.punch-list ion-label.punch-text {
+  font-size: 14px;
+  line-height: 1.3;
 }
 
 .punch-item {
@@ -722,12 +730,6 @@ ion-item ion-label {
 
 .punch-icon {
   font-size: 18px;     /* smaller icon */
-}
-
-.punch-text {
-  font-size: 14px;     /* smaller datetime text */
-  line-height: 1.3;
-  margin: 0;
 }
 
 .punch-missing ion-icon,
