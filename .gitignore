@@ -26,3 +26,5 @@ yarn-error.log*
 *.pem
 *.key
 
+# Local API config
+src/config/api.config.ts
