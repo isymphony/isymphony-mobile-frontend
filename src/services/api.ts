@@ -4,8 +4,8 @@ import { Capacitor } from "@capacitor/core";
 const isNative = Capacitor.isNativePlatform();
 
 // (cmd → ipconfig → IPv4 Address)
-const LOCAL_IP = "192.168.160.19";
-////const LOCAL_IP = "10.1.10.33";
+////const LOCAL_IP = "192.168.160.19";
+const LOCAL_IP = "10.1.10.33";
 
 const API_BASE_URL = isNative
   ? `http://${LOCAL_IP}/isymphony_api/public/api`
