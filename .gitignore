@@ -28,3 +28,6 @@ yarn-error.log*
 
 # Local API config
 src/config/api.config.ts
+
+# Xcode workspace
+ios/App/App.xcworkspace/
