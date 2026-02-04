@@ -721,6 +721,10 @@ ion-item ion-icon {
   line-height: 1.3;
 }
 
+.ios .punch-list {
+  --ion-font-size: 13px;
+}
+
 .punch-item {
   --inner-padding-top: 6px;
   --inner-padding-bottom: 6px;
