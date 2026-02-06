@@ -169,7 +169,7 @@
       <ion-content class="ion-padding">
 
         <div class="all-modal-title">
-          {{ withdrawMode === 'request'
+          {{ actionType === 'REQUESTED'
             ? 'Request to Withdraw PTO'
             : 'Withdraw PTO'
           }}
@@ -211,7 +211,7 @@
               class="button-spinner"
             />
             <span v-else>
-              {{ withdrawMode === 'request'
+              {{ actionType === 'REQUESTED'
                 ? 'Yes, Request'
                 : 'Yes, Withdraw'
               }}
@@ -273,8 +273,15 @@ const showWithdrawRequestModal = ref(false);
 const withdrawReason = ref("");
 const submittingWithdraw = ref(false);
 
-type WithdrawMode = "request" | "withdraw";
-const withdrawMode = ref<WithdrawMode>("request");
+type ActionType = "ADDED" | "EDITED" | "DELETED" | "REQUESTED";
+const actionType = ref<ActionType>("REQUESTED");
+
+const successMessages: Record<string, string> = {
+  REQUESTED: "Your PTO Withdrawal Request was sent!",
+  DELETED: "Your PTO was withdrawn successfully.",
+  EDITED: "Your PTO was updated successfully.",
+  ADDED: "Your PTO was submitted successfully.",
+};
 
 /**
  * Track which PTO comments are expanded
@@ -345,7 +352,7 @@ const loadPtoHistory = async () => {
   const userId = await Preferences.get({ key: "userId" });
   const token = await Preferences.get({ key: "authToken" });
 
-  console.log("Loading PTO history for user:", userId.value);
+  //console.log("Loading PTO history for user:", userId.value);
 
   try {
     const res = await api.post(
@@ -505,7 +512,7 @@ const onWithdrawPto = (pto: any) => {
 
   selectedPto.value = pto;
   withdrawReason.value = "";
-  withdrawMode.value = "withdraw";
+  actionType.value = "DELETED";
   showWithdrawRequestModal.value = true;
 };
 
@@ -518,7 +525,7 @@ const onRequestWithdrawPto = (pto: any) => {
 
   selectedPto.value = pto;
   withdrawReason.value = "";
-  withdrawMode.value = "request";
+  actionType.value = "REQUESTED";
   showWithdrawRequestModal.value = true;
 };
 
@@ -542,13 +549,13 @@ const submitWithdraw = async () => {
     );
 
     await api.post(
-      "/pto-withdraw",
+      "/pto-action",
       {
         site_name: site.value,
         client_id: Number(clientId.value),
         user_id: Number(userId.value),
 
-        withdraw_mode: withdrawMode.value,
+        action_type: actionType.value,
 
         pto_id: selectedPto.value.pto_id,
         assignment_id: selectedPto.value.pto_assignmentid,
@@ -566,7 +573,7 @@ const submitWithdraw = async () => {
     );
 
     showWithdrawRequestModal.value = false;
-    await showSuccessAlert();
+    await showSuccessAlert(actionType.value);
     await loadAll();
 
   } catch (err: any) {
@@ -583,15 +590,12 @@ const submitWithdraw = async () => {
 
 
 /**
- * Show success alert
+ * Show success alert for different actions (edit, delete, request)
  */
-const showSuccessAlert = async () => {
+const showSuccessAlert = async (action: string) => {
   const alert = await alertController.create({
     header: "Success!",
-    message:
-      withdrawMode.value === "request"
-        ? "Your PTO Withdrawal Request was sent!"
-        : "Your PTO was withdrawn successfully.",
+    message: successMessages[action] || "Action completed successfully.",
     buttons: ["OK"],
   });
 
