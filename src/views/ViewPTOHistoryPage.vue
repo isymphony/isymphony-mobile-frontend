@@ -208,9 +208,9 @@
             <ion-spinner
               v-if="submittingWithdraw"
               name="crescent"
-              class="button-spinner"
+              style="margin-right:6px"
             />
-            <span v-else>
+            <span>
               {{ actionType === 'REQUESTED'
                 ? 'Yes, Request'
                 : 'Yes, Withdraw'
@@ -223,6 +223,111 @@
       </ion-content>
     </ion-modal>
 
+    <!-- Edit PTO Modal -->
+    <ion-modal :key="editModalKey" :is-open="showEditModal" @didDismiss="showEditModal = false" class="editpto-modal">
+      <ion-content class="ion-padding">
+
+        <!-- Title -->
+        <div class="all-modal-title">
+          Edit PTO
+        </div>
+
+        <div class="modal-row">
+          <strong>Order #:</strong> {{ selectedPto?.pto_ordernumber }}
+        </div>
+
+        <div class="modal-row">
+          <strong>{{ isDateOnly(selectedPto) ? 'Date:' : 'Date/Time:' }}</strong> {{ formatDateTime(selectedPto) }}
+        </div>
+
+        <!-- Hours -->
+        <div class="edit-field">
+          <div class="edit-field-label">Hours</div>
+          <div class="edit-input hours-input">
+            <input
+              type="number"
+              step="0.1"
+              v-model.number="editHours"
+              class="native-input"
+            />
+          </div>
+          <ion-text v-if="editHoursError" color="danger">
+            <p class="error-text">{{ editHoursError }}</p>
+          </ion-text>
+        </div>
+
+        <!-- Start Time (CLOCK ENTRY only) -->
+        <div
+          v-if="timeCaptureMode === 'CLOCK ENTRY'"
+          class="edit-field"
+        >
+          <div class="edit-field-label">Start Time</div>
+
+          <div
+            class="edit-input start-time-input"
+            @click="showTimePicker = true"
+          >
+            <span class="start-time-value">
+              {{ formatTime(editStartTime) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Comments -->
+        <div class="edit-field">
+          <div class="edit-field-label">Comments (required)</div>
+
+          <ion-item class="edit-input">
+            <ion-textarea
+              v-model="editComments"
+              auto-grow
+            />
+          </ion-item>
+          <ion-text v-if="editCommentsError" color="danger">
+            <p class="error-text">{{ editCommentsError }}</p>
+          </ion-text>
+        </div>
+
+        <!-- Actions -->
+        <div class="modal-actions">
+          <ion-button
+            fill="clear"
+            :disabled="savingEdit"
+            @click="closeEditModal"
+          >
+            Cancel
+          </ion-button>
+
+          <ion-button
+            color="primary"
+            :disabled="savingEdit"
+            @click="submitEditPto"
+          >
+            <ion-spinner
+              v-if="savingEdit"
+              name="crescent"
+              style="margin-right:6px"
+            />
+            Save Changes
+          </ion-button>
+        </div>
+
+      </ion-content>
+
+      <ion-popover
+        :is-open="showTimePicker"
+        @didDismiss="showTimePicker = false"
+        class="time-picker-popover"
+      >
+        <ion-datetime
+          presentation="time"
+          hour-cycle="h12"
+          mode="ios"
+          v-model="editStartTime"
+        />
+      </ion-popover>
+
+    </ion-modal>
 
   </ion-page>
 </template>
@@ -251,6 +356,10 @@ import {
   IonButton,
   IonModal,
   IonTextarea,
+  IonInput,
+  IonDatetime,
+  IonText,
+  IonPopover
 } from "@ionic/vue";
 import { Preferences } from "@capacitor/preferences";
 import api from "@/services/api";
@@ -272,6 +381,16 @@ const selectedPto = ref<any | null>(null);
 const showWithdrawRequestModal = ref(false);
 const withdrawReason = ref("");
 const submittingWithdraw = ref(false);
+
+const editModalKey = ref(0);
+const showEditModal = ref(false);
+const editHours = ref<number | null>(null);
+const editStartTime = ref<string>("");   // HH:mm or ISO
+const showTimePicker = ref(false);
+const editComments = ref("");
+const savingEdit = ref(false);
+const editHoursError = ref("");
+const editCommentsError = ref("");
 
 type ActionType = "ADDED" | "EDITED" | "DELETED" | "REQUESTED";
 const actionType = ref<ActionType>("REQUESTED");
@@ -499,8 +618,20 @@ const hasAnyAction = computed(() => {
  */
 const onEditPto = (pto: any) => {
   console.log("Edit PTO", pto.pto_id);
-  showUnderConstruction();
-  // router.push(`/submit-pto?pto_id=${pto.pto_id}`);
+  //showUnderConstruction();
+  
+  selectedPto.value = pto;
+  editHours.value = Math.abs(Number(pto.pto_dayshours));
+  editStartTime.value = pto.pto_timefrom || "08:00";
+  editComments.value = pto.pto_enteredcomments || "";
+  showTimePicker.value = false;
+  actionType.value = "EDITED";
+
+  editHoursError.value = "";
+  editCommentsError.value = "";
+
+  editModalKey.value++;              // 🔑 force re-render
+  showEditModal.value = true;
 };
 
 /**
@@ -574,7 +705,7 @@ const submitWithdraw = async () => {
 
     showWithdrawRequestModal.value = false;
     await showSuccessAlert(actionType.value);
-    await loadAll();
+    await loadAll(); // 🔄 refresh PTO history
 
   } catch (err: any) {
     console.error("Withdraw failed", err);
@@ -588,6 +719,71 @@ const submitWithdraw = async () => {
   }
 };
 
+const closeEditModal = () => {
+  showEditModal.value = false;
+};
+
+const submitEditPto = async () => {
+  if (!selectedPto.value || savingEdit.value) return;
+
+    // 🔴 reset errors
+  editHoursError.value = "";
+  editCommentsError.value = "";
+
+  // ❌ validate Hours
+  if (!editHours.value || editHours.value <= 0) {
+    editHoursError.value = "Hours must be greater than 0.";
+    return;
+  }
+
+  // ❌ validate Comments
+  if (!editComments.value || !editComments.value.trim()) {
+    editCommentsError.value = "Comments are required.";
+    return;
+  }
+
+  savingEdit.value = true;
+
+  try {
+    const site = await Preferences.get({ key: "siteName" });
+    const clientId = await Preferences.get({ key: "clientId" });
+    const userId = await Preferences.get({ key: "userId" });
+    const token = await Preferences.get({ key: "authToken" });
+
+    await api.post(
+      "/pto-action",
+      {
+        site_name: site.value,
+        client_id: Number(clientId.value),
+        user_id: Number(userId.value),
+
+        action_type: actionType.value,
+
+        pto_id: selectedPto.value.pto_id,
+        assignment_id: selectedPto.value.pto_assignmentid,
+        order_number: selectedPto.value.pto_ordernumber,
+        date_from: selectedPto.value.pto_datefrom,
+        time_from: timeCaptureMode.value === "CLOCK ENTRY" ? editStartTime.value : null,
+        hours: editHours.value,
+        comments: editComments.value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+        },
+      }
+    );
+
+    showEditModal.value = false;
+    await showSuccessAlert(actionType.value);
+    await loadAll(); // 🔄 refresh PTO history
+
+  } catch (err) {
+    console.error("Edit PTO failed", err);
+  } finally {
+    savingEdit.value = false;
+  }
+};
 
 /**
  * Show success alert for different actions (edit, delete, request)
@@ -868,9 +1064,181 @@ html.dark .comments-input-item ion-textarea {
   line-height: 1.4;
 }
 
-.button-spinner {
-  width: 18px;
-  height: 18px;
+.editpto-modal {
+  --width: 400px;
+  --max-width: 92%;
+  --height: 450px;
+  --border-radius: 16px;
+}
+
+.time-picker-block {
+  margin-top: 14px;
+}
+
+.time-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  margin-bottom: 6px;
+}
+
+.error-text {
+  margin: 4px 0 0 4px;
+  font-size: 13px;
+}
+
+.start-time-block {
+  margin-top: 14px;
+}
+
+.start-time-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 12px 14px;
+  border-radius: 12px;
+
+  background: var(--ion-item-background, #f4f5f8);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+html.dark .start-time-row {
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.start-time-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+}
+
+.start-time-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ion-text-color);
+}
+
+.time-picker-popover {
+  --width: 190px;
+  --border-radius: 14px;
+}
+
+/* Dark mode time picker popover */
+html.dark ion-popover.time-picker-popover::part(content) {
+  background: #1f1f1f;
+  color: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* ===== Light mode: time picker popover ===== */
+html:not(.dark) ion-popover.time-picker-popover::part(content) {
+  background: #ffffff;
+  color: #000000;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+
+.time-picker-popover ion-datetime {
+  --wheel-font-size: 15px;
+  --wheel-item-height: 34px;
+}
+
+html.dark ion-popover.time-picker-popover ion-datetime {
+  background: transparent;
+  color: var(--ion-text-color);
+}
+
+/* Done button align right */
+.time-picker-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 6px;
+}
+
+.edit-field {
+  margin-top: 14px;
+}
+
+.edit-field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  margin-bottom: 6px;
+}
+
+.edit-input {
+  --background: transparent;
+  background: var(--ion-item-background, #f4f5f8);
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+
+  padding: 10px 0px;
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+}
+
+.edit-input::part(native) {
+  min-height: 0px;
+  padding: 10;
+  align-items: center;
+}
+
+html.dark .edit-input {
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Remove default ion-item padding */
+.edit-input ion-input,
+.edit-input ion-textarea {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.start-time-input {
+  cursor: pointer;
+}
+
+.start-time-value {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ion-text-color);
+  padding-left: 10px; 
+}
+
+.hours-input {
+  min-height: 44px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+
+  background: var(--ion-item-background, #f4f5f8);
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 12px;
+}
+
+html.dark .hours-input {
+  background: #1f1f1f;
+  border: 1px solid rgba(255,255,255,.25);
+}
+
+.native-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+
+  font-size: 15px;
+  color: var(--ion-text-color);
+  line-height: 1.4;
 }
 
 </style>
