@@ -1,7 +1,6 @@
 import axios from "axios";
 import { Capacitor } from "@capacitor/core";
-import { LOCAL_IP } from "../config/api.config";
-import { API_TIMEOUT } from "../config/api.config";
+import { LOCAL_IP, API_TIMEOUT } from "../config/api.config";
 
 const isNative = Capacitor.isNativePlatform();
 
