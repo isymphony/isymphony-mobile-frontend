@@ -180,7 +180,15 @@
         </div>
 
         <div class="modal-row">
-          <strong>{{ isDateOnly(selectedPto) ? 'Date:' : 'Date/Time:' }}</strong> {{ formatDateTime(selectedPto) }}
+          <strong>Date:</strong> {{ formatDate(selectedPto.pto_datefrom) }}
+        </div>
+
+        <!-- Start Time (CLOCK ENTRY only) -->
+        <div
+          v-if="timeCaptureMode === 'CLOCK ENTRY'"
+          class="modal-row"
+        >
+          <strong>Start Time:</strong> {{ formatTime(selectedPto.pto_timefrom) }}
         </div>
 
         <div class="modal-row">
@@ -229,31 +237,11 @@
 
         <!-- Title -->
         <div class="all-modal-title">
-          Edit PTO
+          Edit PTO - Order #{{ selectedPto?.pto_ordernumber }}
         </div>
 
         <div class="modal-row">
-          <strong>Order #:</strong> {{ selectedPto?.pto_ordernumber }}
-        </div>
-
-        <div class="modal-row">
-          <strong>{{ isDateOnly(selectedPto) ? 'Date:' : 'Date/Time:' }}</strong> {{ formatDateTime(selectedPto) }}
-        </div>
-
-        <!-- Hours -->
-        <div class="edit-field">
-          <div class="edit-field-label">Hours</div>
-          <div class="edit-input hours-input">
-            <input
-              type="number"
-              step="0.1"
-              v-model.number="editHours"
-              class="native-input"
-            />
-          </div>
-          <ion-text v-if="editHoursError" color="danger">
-            <p class="error-text">{{ editHoursError }}</p>
-          </ion-text>
+          <strong>Date:</strong> {{ formatDate(selectedPto.pto_datefrom) }}
         </div>
 
         <!-- Start Time (CLOCK ENTRY only) -->
@@ -273,6 +261,22 @@
           </div>
         </div>
 
+        <!-- Hours -->
+        <div class="edit-field">
+          <div class="edit-field-label">Hours</div>
+          <div class="edit-input hours-input">
+            <input
+              type="number"
+              step="0.1"
+              v-model.number="editHours"
+              class="native-input"
+            />
+          </div>
+          <ion-text v-if="editHoursError" color="danger">
+            <p class="error-text">{{ editHoursError }}</p>
+          </ion-text>
+        </div>
+
         <!-- Comments -->
         <div class="edit-field">
           <div class="edit-field-label">Comments (required)</div>
@@ -280,7 +284,7 @@
           <ion-item class="edit-input">
             <ion-textarea
               v-model="editComments"
-              auto-grow
+              :rows="2"
             />
           </ion-item>
           <ion-text v-if="editCommentsError" color="danger">
@@ -1025,14 +1029,14 @@ html.dark .chevron-icon {
 }
 
 .deletewithdraw-modal {
-  --width: 380px;
+  --width: 350px;
   --max-width: 92%;
   --height: 320px;
   --border-radius: 16px;
 }
 
 .modal-row {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--ion-color-medium);
   margin-bottom: 12px;
 }
@@ -1065,7 +1069,7 @@ html.dark .comments-input-item ion-textarea {
 }
 
 .editpto-modal {
-  --width: 400px;
+  --width: 350px;
   --max-width: 92%;
   --height: 450px;
   --border-radius: 16px;
