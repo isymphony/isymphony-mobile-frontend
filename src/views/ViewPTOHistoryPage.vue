@@ -179,7 +179,9 @@
           <strong>Order #:</strong> {{ selectedPto?.pto_ordernumber }}
         </div>
 
-        <strong>{{ isDateOnly(selectedPto) ? 'Date:' : 'Date/Time:' }}</strong> {{ formatDateTime(selectedPto) }}
+        <div class="modal-row">
+          <strong>{{ isDateOnly(selectedPto) ? 'Date:' : 'Date/Time:' }}</strong> {{ formatDateTime(selectedPto) }}
+        </div>
 
         <div class="modal-row">
           <strong>Hours:</strong> {{ formatHours(selectedPto?.pto_dayshours) }}
