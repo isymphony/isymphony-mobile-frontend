@@ -179,17 +179,7 @@
           <strong>Order #:</strong> {{ selectedPto?.pto_ordernumber }}
         </div>
 
-        <div class="modal-row">
-          <strong>Date:</strong> {{ formatDate(selectedPto.pto_datefrom) }}
-        </div>
-
-        <!-- Start Time (CLOCK ENTRY only) -->
-        <div
-          v-if="timeCaptureMode === 'CLOCK ENTRY'"
-          class="modal-row"
-        >
-          <strong>Start Time:</strong> {{ formatTime(selectedPto.pto_timefrom) }}
-        </div>
+        <strong>{{ isDateOnly(selectedPto) ? 'Date:' : 'Date/Time:' }}</strong> {{ formatDateTime(selectedPto) }}
 
         <div class="modal-row">
           <strong>Hours:</strong> {{ formatHours(selectedPto?.pto_dayshours) }}
@@ -199,7 +189,6 @@
           <ion-textarea
             v-model="withdrawReason"
             placeholder="Enter a reason (optional)"
-            auto-grow
           />
         </ion-item>
 
@@ -232,7 +221,10 @@
     </ion-modal>
 
     <!-- Edit PTO Modal -->
-    <ion-modal :key="editModalKey" :is-open="showEditModal" @didDismiss="showEditModal = false" class="editpto-modal">
+    <ion-modal :key="editModalKey" :is-open="showEditModal" @didDismiss="showEditModal = false" 
+        class="editpto-modal"
+        :style="editModalStyle"
+    >
       <ion-content class="ion-padding">
 
         <!-- Title -->
@@ -279,12 +271,10 @@
 
         <!-- Comments -->
         <div class="edit-field">
-          <div class="edit-field-label">Comments (required)</div>
-
           <ion-item class="edit-input">
             <ion-textarea
               v-model="editComments"
-              :rows="2"
+              placeholder="Comments (required)"
             />
           </ion-item>
           <ion-text v-if="editCommentsError" color="danger">
@@ -857,6 +847,15 @@ const toggleComment = (ptoId: number) => {
     !expandedComments.value[ptoId];
 };
 
+const editModalStyle = computed(() => {
+  return {
+    '--height':
+      timeCaptureMode.value === 'CLOCK ENTRY'
+        ? '430px'
+        : '360px',
+  };
+});
+
 </script>
 
 <style scoped>
@@ -1071,8 +1070,12 @@ html.dark .comments-input-item ion-textarea {
 .editpto-modal {
   --width: 350px;
   --max-width: 92%;
-  --height: 450px;
   --border-radius: 16px;
+}
+
+/* Safety cho màn hình nhỏ */
+ion-modal.editpto-modal::part(content) {
+  max-height: 90vh;
 }
 
 .time-picker-block {
@@ -1203,8 +1206,13 @@ html.dark .edit-input {
 .edit-input ion-textarea {
   --padding-start: 0;
   --padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
+  --padding-top: 6px;
+  --padding-bottom: 6px;
+  --min-height: 44px;
+}
+
+.edit-input ion-textarea textarea {
+  line-height: 1.4;
 }
 
 .start-time-input {
