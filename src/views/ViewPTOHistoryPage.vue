@@ -853,8 +853,8 @@ const editModalStyle = computed(() => {
   return {
     '--height':
       timeCaptureMode.value === 'CLOCK ENTRY'
-        ? '430px'
-        : '360px',
+        ? '420px'
+        : '350px',
   };
 });
 
