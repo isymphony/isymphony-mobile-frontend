@@ -205,7 +205,7 @@
     <ion-modal :is-open="showAssignmentModal" @didDismiss="onAssignmentDismiss" class="assignment-modal">
       <ion-content class="ion-padding">
         <div class="all-modal-title">
-          Choose the Order Number
+          Select Order Number
         </div>
         <ion-list>
           <ion-item
@@ -216,7 +216,7 @@
             :detail="false"
           >
             <ion-label>
-              Order #<strong>{{ asg.order_number }}</strong>
+              <strong>{{ asg.order_number }}</strong>
               <span v-if="asg.type_location">
                 - {{ asg.type_location }}
               </span>
