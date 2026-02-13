@@ -732,6 +732,11 @@ const submitEditPto = async () => {
     return;
   }
 
+  if (!editHours.value || editHours.value > 24) {
+    editHoursError.value = "Hours cannot exceed 24.";
+    return;
+  }
+
   // ❌ validate Comments
   if (!editComments.value || !editComments.value.trim()) {
     editCommentsError.value = "Comments are required.";
