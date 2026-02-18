@@ -18,6 +18,7 @@ import PendingTimesheetPage from '@/views/PendingTimesheetPage.vue';
 import WeeklyGridEntryPage from '@/views/WeeklyGridEntryPage.vue';
 import MyPtoPage from '@/views/MyPtoPage.vue';
 import ViewPTOHistoryPage from '@/views/ViewPTOHistoryPage.vue';
+import SubmitPtoStep1 from '@/views/SubmitPtoStep1.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -102,6 +103,17 @@ const routes: Array<RouteRecordRaw> = [
     component: MyPtoPage,
     meta: { requiresAuth: true }
   },
+  {
+    path: '/submit-pto-step1',
+    component: SubmitPtoStep1,
+    meta: { requiresAuth: true }
+  },
+  { 
+    path: "/submit-pto-step2",
+    name: "SubmitPtoStep2",
+    component: () => import("@/views/SubmitPtoStep2.vue"),
+    meta: { requiresAuth: true },
+  },  
   {
     path: '/view-pto-history',
     component: ViewPTOHistoryPage,

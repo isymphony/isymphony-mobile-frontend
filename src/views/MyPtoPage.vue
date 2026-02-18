@@ -162,8 +162,9 @@ const formatHours = (value: number) => {
 
 /* Navigation placeholders */
 const submitPto = () => {
-  //router.push("/submit-pto");
-  showUnderConstruction();
+  //showUnderConstruction();j
+  router.push("/submit-pto-step1");
+
 };
 
 const viewPtoHistory = () => {
