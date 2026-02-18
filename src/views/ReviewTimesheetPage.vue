@@ -77,21 +77,21 @@
         </div>
 
         <ion-button
-          v-if="canModify"
-          expand="block"
-          class="go-bottom-btn-outline"
-          @click="goModifyTimesheet"
-        >
-          Modify Timesheet
-        </ion-button>
-
-        <ion-button
           v-if="canSubmit"
           expand="block"
           class="go-bottom-btn"
           @click="submitForApproval"
         >
           Submit For Approval
+        </ion-button>
+
+        <ion-button
+          v-if="canModify"
+          expand="block"
+          class="go-bottom-btn-outline"
+          @click="goModifyTimesheet"
+        >
+          Modify Timesheet
         </ion-button>
 
         <ion-button
@@ -466,6 +466,9 @@ html.dark .day-block {
 
 .bottom-summary {
   padding: 16px;
+  gap: 12px;
+  display: flex;
+  flex-direction: column;
 }
 
 .big-total {
