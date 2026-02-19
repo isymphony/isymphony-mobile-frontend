@@ -112,3 +112,22 @@ html {
   font-size: 15px;
   line-height: 1.35;
 }
+
+/* iOS dark mode ion-alert fix */
+html.dark ion-alert .alert-wrapper {
+  background: #1e1e1e !important;
+  color: #ffffff !important;
+}
+
+html.dark ion-alert .alert-head,
+html.dark ion-alert .alert-title {
+  color: #ffffff !important;
+}
+
+html.dark ion-alert .alert-message {
+  color: #dddddd !important;
+}
+
+html.dark ion-alert .alert-button {
+  color: var(--ion-color-primary) !important;
+}
