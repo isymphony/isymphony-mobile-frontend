@@ -34,15 +34,15 @@
               {{ formatCardTitle(c.date) }}
             </div>
 
-            <!-- Start Time (CLOCK ENTRY only) -->
             <div v-if="timeCaptureMode === 'CLOCK ENTRY'" class="field-block">
               <div class="field-label">Start Time</div>
 
-              <div
-                class="field-input clickable"
-                @click="openTimePicker(idx)"
-              >
-                <span class="start-time-text">{{ formatTime(c.startTime) }}</span>
+              <div class="field-input">
+                <input
+                  type="time"
+                  v-model="c.startTime"
+                  class="native-input"
+                />
               </div>
             </div>
 
@@ -50,16 +50,17 @@
             <div class="field-block">
               <div class="field-label">Hours</div>
 
-              <ion-item class="field-input hours-input" lines="none">
+              <div class="field-input">
                 <input
                   type="number"
                   step="0.1"
-                  min="0.1" max="24"
+                  min="0.1"
+                  max="24"
                   v-model.number="c.hours"
                   class="native-input"
                   @input="onHoursInput($event, idx)"
                 />
-              </ion-item>
+              </div>
 
               <ion-text v-if="c.errors.hours" color="danger">
                 <p class="error-text">{{ c.errors.hours }}</p>
@@ -117,19 +118,25 @@
           </ion-button>
         </div>
 
-        <!-- Time picker popover (shared) -->
-        <ion-popover
+        <ion-modal
           :is-open="showTimePicker"
           @didDismiss="showTimePicker = false"
-          class="time-picker-popover"
+          :breakpoints="[0, 0.35]"
+          :initial-breakpoint="0.35"
+          handle
+          class="time-sheet"
         >
-          <ion-datetime
-            presentation="time"
-            hour-cycle="h12"
-            mode="ios"
-            v-model="activeTimeProxy"
-          />
-        </ion-popover>
+          <ion-content class="time-sheet-content">
+            <ion-datetime
+              presentation="time"
+              hour-cycle="h12"
+              :prefer-wheel="true"
+              v-model="activeTimeProxy"
+            />
+          </ion-content>
+        </ion-modal>
+
+
       </div>
     </ion-content>
   </ion-page>
@@ -635,35 +642,25 @@ html.dark .hours-input {
   gap: 12px;
 }
 
-/* popover sizing */
-.time-picker-popover {
-  --width: 190px;
-  --border-radius: 14px;
-}
+input[type="time"] {
+  appearance: none;
+  -webkit-appearance: none;
 
-/* Dark mode time picker popover */
-html.dark ion-popover.time-picker-popover::part(content) {
-  background: #1f1f1f;
-  color: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-}
-
-/* ===== Light mode: time picker popover ===== */
-html:not(.dark) ion-popover.time-picker-popover::part(content) {
-  background: #ffffff;
-  color: #000000;
-  border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-}
-
-.time-picker-popover ion-datetime {
-  --wheel-font-size: 15px;
-  --wheel-item-height: 34px;
-}
-
-html.dark ion-popover.time-picker-popover ion-datetime {
   background: transparent;
+  border: none;
+  outline: none;
+
+  font-size: 15px;
+  font-weight: 500;
+
   color: var(--ion-text-color);
 }
+
+/* Remove inner spin buttons on number */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 </style>
