@@ -693,8 +693,6 @@ html.dark ion-modal.time-sheet ion-content {
 }
 
 html.dark ion-modal.time-sheet ion-datetime {
-  --background: #1f1f1f;
-  background: #1f1f1f;
   color: #ffffff;
 }
 
