@@ -669,6 +669,35 @@ html.dark .hours-input {
   line-height: 1.4;
 }
 
+.time-sheet {
+  --border-radius: 16px 16px 0 0;
+}
+
+.time-sheet-content {
+  padding: 12px 0;
+}
+
+/* iOS handle spacing */
+.time-sheet ion-datetime {
+  margin-top: 4px;
+}
+
+html.dark ion-modal.time-sheet::part(content) {
+  --background: #1f1f1f;
+  background: #1f1f1f;
+}
+
+html.dark ion-modal.time-sheet ion-content {
+  --background: #1f1f1f;
+  background: #1f1f1f;
+}
+
+html.dark ion-modal.time-sheet ion-datetime {
+  --background: #1f1f1f;
+  background: #1f1f1f;
+  color: #ffffff;
+}
+
 .error-text {
   margin: 6px 0 0 2px;
   font-size: 13px;
