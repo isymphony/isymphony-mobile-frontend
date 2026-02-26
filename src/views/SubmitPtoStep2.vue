@@ -10,7 +10,7 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content class="ion-padding">
+    <ion-content ref="contentRef" class="ion-padding">
       <div v-if="!pageReady" class="loading-block">
         <ion-spinner name="crescent" />
       </div>
@@ -34,33 +34,33 @@
               {{ formatCardTitle(c.date) }}
             </div>
 
+            <!-- Start Time (CLOCK ENTRY only) -->
             <div v-if="timeCaptureMode === 'CLOCK ENTRY'" class="field-block">
               <div class="field-label">Start Time</div>
 
-              <div class="field-input">
-                <input
-                  type="time"
-                  v-model="c.startTime"
-                  class="native-input"
-                />
+              <div
+                class="field-input clickable"
+                @click="openTimePicker(idx)"
+              >
+                <span class="start-time-text">{{ formatTime(c.startTime) }}</span>
               </div>
+
             </div>
 
             <!-- Hours -->
             <div class="field-block">
               <div class="field-label">Hours</div>
 
-              <div class="field-input">
+              <ion-item class="field-input hours-input" lines="none">
                 <input
                   type="number"
                   step="0.1"
-                  min="0.1"
-                  max="24"
+                  min="0.1" max="24"
                   v-model.number="c.hours"
                   class="native-input"
                   @input="onHoursInput($event, idx)"
                 />
-              </div>
+              </ion-item>
 
               <ion-text v-if="c.errors.hours" color="danger">
                 <p class="error-text">{{ c.errors.hours }}</p>
@@ -118,9 +118,12 @@
           </ion-button>
         </div>
 
+        <!-- ⭐ Custom spacer -->
+        <div class="custom-spacer"></div>
+
         <ion-modal
           :is-open="showTimePicker"
-          @didDismiss="showTimePicker = false"
+          @didDismiss="onTimePickerDismiss"
           :breakpoints="[0, 0.35]"
           :initial-breakpoint="0.35"
           handle
@@ -192,6 +195,8 @@ const selectedAssignmentId = ref<number | null>(null);
 const selectedAssignment = computed(() =>
   assignments.value.find((a: any) => a.assignment_id === selectedAssignmentId.value)
 );
+
+const contentRef = ref<InstanceType<typeof IonContent> | null>(null);
 
 const timeCaptureMode = ref<TimeCaptureMode>("HOUR ENTRY");
 
@@ -330,9 +335,43 @@ const onCommentsInput = (ev: any, idx: number) => {
   cards.value[idx].errors.comments = undefined;
 };
 
-const openTimePicker = (idx: number) => {
+const openTimePicker = async (idx: number) => {
   activeCardIndex.value = idx;
-  showTimePicker.value = true;
+
+  await nextTick();
+
+  const el = cardRefs.value[idx];
+  if (!el || !contentRef.value) {
+    showTimePicker.value = true;
+    return;
+  }
+
+  const rect = el.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+
+  // if card bottom is below 65% of viewport, scroll to it so that time picker won't cover it
+  if (rect.bottom > viewportHeight * 0.65) {
+    await contentRef.value.$el.scrollByPoint(0, rect.bottom - viewportHeight * 0.6, 300);
+  }
+
+  setTimeout(() => {
+    // if already open for another card, close first then open for the new one
+    if (showTimePicker.value) {
+      showTimePicker.value = false;
+
+      // small delay to allow modal to close before opening new one, otherwise it can glitch
+      setTimeout(() => {
+        showTimePicker.value = true;
+      }, 50);
+    } else {
+      showTimePicker.value = true;
+    }
+  }, 200);
+};
+
+const onTimePickerDismiss = () => {
+  showTimePicker.value = false;
+  activeCardIndex.value = null;
 };
 
 /** Validation */
@@ -577,8 +616,8 @@ html.dark .field-input {
 }
 
 .start-time-text {
-  font-size: 15px;
-  font-weight: 550;
+  font-size: 14px;
+  font-weight: 500;
   color: var(--ion-text-color);
 }
 
@@ -642,25 +681,7 @@ html.dark .hours-input {
   gap: 12px;
 }
 
-input[type="time"] {
-  appearance: none;
-  -webkit-appearance: none;
-
-  background: transparent;
-  border: none;
-  outline: none;
-
-  font-size: 15px;
-  font-weight: 500;
-
-  color: var(--ion-text-color);
+.custom-spacer {
+  height: 50px;
 }
-
-/* Remove inner spin buttons on number */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
 </style>
