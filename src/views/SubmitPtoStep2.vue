@@ -135,6 +135,7 @@
               hour-cycle="h12"
               :prefer-wheel="true"
               v-model="activeTimeProxy"
+              class="time-datetime"
             />
           </ion-content>
         </ion-modal>
@@ -682,21 +683,19 @@ html.dark .hours-input {
   margin-top: 4px;
 }
 
-html.dark ion-modal.time-sheet::part(content) {
-  --background: #1f1f1f;
-  background: #1f1f1f;
-}
-
-html.dark ion-modal.time-sheet ion-content {
-  --background: #1f1f1f;
-  background: #1f1f1f;
-}
-
-html.dark ion-modal.time-sheet ion-datetime {
-  color: #ffffff;
+html.dark .time-sheet {
+  color-scheme: dark;
 }
 
 html.dark ion-datetime {
+  color-scheme: dark;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+html.dark .time-datetime {
   color-scheme: dark;
 }
 
@@ -714,5 +713,71 @@ html.dark ion-datetime {
 
 .custom-spacer {
   height: 50px;
+}
+</style>
+
+<style>
+/* ===== Time sheet dark mode (iOS) ===== */
+body.dark ion-modal.time-sheet::part(content) {
+  background: #1f1f1f !important;
+  color: #ffffff !important;
+}
+
+/* ion-datetime uses its own internal wheel backgrounds */
+body.dark ion-modal.time-sheet ion-datetime {
+  --background: #1f1f1f;
+  --color: #ffffff;
+
+  /* wheel fade + highlight (important on iOS) */
+  --wheel-fade-background-rgb: 31, 31, 31;
+  --wheel-highlight-background: rgba(255, 255, 255, 0.08);
+  --wheel-highlight-border-radius: 10px;
+
+  color-scheme: dark;
+}
+
+/* Optional: make buttons visible */
+body.dark ion-modal.time-sheet ion-datetime::part(buttons) {
+  background: #1f1f1f;
+}
+body.dark ion-modal.time-sheet ion-datetime::part(cancel-button),
+body.dark ion-modal.time-sheet ion-datetime::part(confirm-button) {
+  color: #ffffff;
+}
+
+/* ===== Time-sheet modal: force correct background on iOS dark mode ===== */
+/* match both html.dark and body.dark */
+html.dark ion-modal.time-sheet,
+body.dark ion-modal.time-sheet {
+  --background: #1f1f1f !important;
+  color-scheme: dark;
+}
+
+/* ion-content inside modal must also be forced */
+html.dark ion-modal.time-sheet ion-content,
+body.dark ion-modal.time-sheet ion-content {
+  --background: #1f1f1f !important;
+  background: #1f1f1f !important;
+  color: #ffffff !important;
+}
+
+/* ion-datetime wheel */
+html.dark ion-modal.time-sheet ion-datetime,
+body.dark ion-modal.time-sheet ion-datetime {
+  --background: #1f1f1f !important;
+  --color: #ffffff !important;
+
+  --wheel-fade-background-rgb: 31, 31, 31;
+  --wheel-highlight-background: rgba(255, 255, 255, 0.08);
+  --wheel-highlight-border-radius: 10px;
+
+  color: #ffffff !important;
+  color-scheme: dark;
+}
+
+/* optional: make the grabber/handle visible */
+html.dark ion-modal.time-sheet::part(handle),
+body.dark ion-modal.time-sheet::part(handle) {
+  color: rgba(255,255,255,0.6);
 }
 </style>
