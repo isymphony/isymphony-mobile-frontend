@@ -1162,7 +1162,6 @@ html:not(.dark) ion-popover.time-picker-popover::part(content) {
 }
 
 html.dark ion-popover.time-picker-popover ion-datetime {
-  background: transparent;
   color: var(--ion-text-color);
 }
 
@@ -1260,4 +1259,41 @@ html.dark .hours-input {
   line-height: 1.4;
 }
 
+</style>
+
+<style>
+/* ===== iOS dark mode fix for ion-datetime inside ion-popover ===== */
+body.dark ion-popover.time-picker-popover::part(content) {
+  background: #1f1f1f !important;
+  color: #ffffff !important;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Ensure the popover inner ion-content uses dark bg too */
+body.dark ion-popover.time-picker-popover ion-content {
+  --background: #1f1f1f;
+}
+
+/* The key: datetime wheel variables for iOS */
+body.dark ion-popover.time-picker-popover ion-datetime {
+  --background: #1f1f1f;
+  --color: #ffffff;
+
+  /* wheel fade + selected-row highlight */
+  --wheel-fade-background-rgb: 31, 31, 31;
+  --wheel-highlight-background: rgba(255, 255, 255, 0.10);
+  --wheel-highlight-border-radius: 10px;
+
+  color-scheme: dark;
+}
+
+/* Optional: make the (hidden/low-contrast) buttons area readable if shown */
+body.dark ion-popover.time-picker-popover ion-datetime::part(buttons) {
+  background: #1f1f1f;
+}
+body.dark ion-popover.time-picker-popover ion-datetime::part(cancel-button),
+body.dark ion-popover.time-picker-popover ion-datetime::part(confirm-button) {
+  color: #ffffff;
+}
 </style>
