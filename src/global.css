@@ -1,3 +1,11 @@
+:root {
+  color-scheme: light;
+}
+
+body.dark {
+  color-scheme: dark;
+}
+
 /* Global reusable bottom action button */
 .go-bottom-btn {
   --background: rgb(146, 18, 163);
