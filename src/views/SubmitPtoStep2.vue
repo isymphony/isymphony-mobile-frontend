@@ -696,6 +696,10 @@ html.dark ion-modal.time-sheet ion-datetime {
   color: #ffffff;
 }
 
+html.dark ion-datetime {
+  color-scheme: dark;
+}
+
 .error-text {
   margin: 6px 0 0 2px;
   font-size: 13px;
