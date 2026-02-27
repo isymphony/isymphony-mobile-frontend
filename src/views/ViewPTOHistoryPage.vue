@@ -310,18 +310,21 @@
 
       </ion-content>
 
-      <ion-popover
+      <ion-modal
         :is-open="showTimePicker"
         @didDismiss="showTimePicker = false"
-        class="time-picker-popover"
+        class="time-picker-modal"
+        backdrop-dismiss="true"
       >
         <ion-datetime
           presentation="time"
           hour-cycle="h12"
+          :prefer-wheel="true"
           mode="ios"
+          color-scheme="auto"
           v-model="editStartTime"
         />
-      </ion-popover>
+      </ion-modal>
 
     </ion-modal>
 
@@ -1080,13 +1083,9 @@ html.dark .comments-input-item ion-textarea {
   --border-radius: 16px;
 }
 
-/* Safety cho màn hình nhỏ */
+/* Safety for small screen */
 ion-modal.editpto-modal::part(content) {
   max-height: 90vh;
-}
-
-.time-picker-block {
-  margin-top: 14px;
 }
 
 .time-label {
@@ -1133,43 +1132,6 @@ html.dark .start-time-row {
   font-size: 15px;
   font-weight: 500;
   color: var(--ion-text-color);
-}
-
-.time-picker-popover {
-  --width: 190px;
-  --border-radius: 14px;
-}
-
-/* Dark mode time picker popover */
-html.dark ion-popover.time-picker-popover::part(content) {
-  background: #1f1f1f;
-  color: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-}
-
-/* ===== Light mode: time picker popover ===== */
-html:not(.dark) ion-popover.time-picker-popover::part(content) {
-  background: #ffffff;
-  color: #000000;
-  border-radius: 14px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-}
-
-.time-picker-popover ion-datetime {
-  --wheel-font-size: 15px;
-  --wheel-item-height: 34px;
-}
-
-html.dark ion-popover.time-picker-popover ion-datetime {
-  color: var(--ion-text-color);
-}
-
-/* Done button align right */
-.time-picker-actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 6px;
 }
 
 .edit-field {
@@ -1262,25 +1224,41 @@ html.dark .hours-input {
 </style>
 
 <style>
-/* ===== iOS dark mode fix for ion-datetime inside ion-popover ===== */
-body.dark ion-popover.time-picker-popover::part(content) {
-  background: #1f1f1f !important;
-  color: #ffffff !important;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+/* ============ Small centered modal like a popover ============ */
+ion-modal.time-picker-modal {
+  --width: 220px;
+  --height: 220px;
+  --border-radius: 16px;
+  --box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+  --backdrop-opacity: 0.35;
+
+  /* IMPORTANT: use ionic var, not background property */
+  --background: #ffffff;
 }
 
-/* Ensure the popover inner ion-content uses dark bg too */
-body.dark ion-popover.time-picker-popover ion-content {
+/* center modal content (safe) */
+ion-modal.time-picker-modal::part(content) {
+  display: grid;
+  place-items: center;
+  overflow: hidden; /* avoid wheel bleeding */
+}
+
+/* make datetime fill nicely */
+ion-modal.time-picker-modal ion-datetime {
+  width: 100%;
+  height: 100%;
+  --background: transparent;
+}
+
+
+/* ============ DARK MODE (match both html.dark and body.dark) ============ */
+:is(html.dark, body.dark) ion-modal.time-picker-modal {
   --background: #1f1f1f;
 }
 
-/* The key: datetime wheel variables for iOS */
-body.dark ion-popover.time-picker-popover ion-datetime {
-  --background: #1f1f1f;
-  --color: #ffffff;
-
-  /* wheel fade + selected-row highlight */
+/* Force iOS wheel to dark using supported vars + parts */
+:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime {
+  --background: transparent;
   --wheel-fade-background-rgb: 31, 31, 31;
   --wheel-highlight-background: rgba(255, 255, 255, 0.10);
   --wheel-highlight-border-radius: 10px;
@@ -1288,12 +1266,31 @@ body.dark ion-popover.time-picker-popover ion-datetime {
   color-scheme: dark;
 }
 
-/* Optional: make the (hidden/low-contrast) buttons area readable if shown */
-body.dark ion-popover.time-picker-popover ion-datetime::part(buttons) {
+/* These parts are the most reliable for “only selected row visible” bug */
+:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(wheel-item) {
+  color: rgba(255,255,255,0.35);
+}
+
+:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(wheel-item-active) {
+  color: #ffffff;
+}
+
+/* Optional: if buttons exist (some platforms hide them) */
+:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(buttons) {
   background: #1f1f1f;
 }
-body.dark ion-popover.time-picker-popover ion-datetime::part(cancel-button),
-body.dark ion-popover.time-picker-popover ion-datetime::part(confirm-button) {
+:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(cancel-button),
+:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(confirm-button) {
   color: #ffffff;
+}
+
+/* Light mode border */
+ion-modal.time-picker-modal::part(content) {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* Dark mode border */
+:is(html.dark, body.dark) ion-modal.time-picker-modal::part(content) {
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 </style>
