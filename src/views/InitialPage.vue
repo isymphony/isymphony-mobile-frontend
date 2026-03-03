@@ -7,11 +7,6 @@
         <ion-title>Welcome</ion-title>
 
         <ion-buttons slot="end">
-          <!-- Toggle Dark Mode -->
-          <ion-button fill="clear" @click="toggleTheme">
-            <ion-icon :icon="moonOutline" />
-          </ion-button>
-
           <!-- Logout -->
           <ion-button fill="clear" @click="logout">
             <ion-icon :icon="logOutOutline" />
@@ -106,7 +101,6 @@ import { Preferences } from "@capacitor/preferences";
 import api from "@/services/api";
 
 import {
-  moonOutline,
   logOutOutline
 } from "ionicons/icons";
 
@@ -181,18 +175,6 @@ const formatDate = (value: string) => {
     month: "short",
     day: "2-digit",
     year: "numeric"
-  });
-};
-
-/**
- * Toggle theme
- */
-const toggleTheme = async () => {
-  const isDark = document.documentElement.classList.toggle("dark");
-
-  await Preferences.set({
-    key: "darkMode",
-    value: isDark ? "1" : "0",
   });
 };
 

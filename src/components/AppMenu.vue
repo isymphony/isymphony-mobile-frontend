@@ -123,16 +123,6 @@
 
     </template>
 
-    <!-- Dark Mode -->
-    <ion-list>
-      <ion-item>
-        <ion-icon slot="start" :icon="moonOutline"></ion-icon>
-        <ion-label>Dark Mode</ion-label>
-        <ion-toggle slot="end" :checked="darkMode" @ionChange="toggleDarkMode"></ion-toggle>
-      </ion-item>
-    </ion-list>
-
-
     <!-- SUPPORT INFO -->
     <div class="support-section" v-if="supportEmail">
       <div class="support-title">Support:</div>
@@ -182,7 +172,6 @@ const router = useRouter();
 // UI state 
 const firstName = ref("");
 const identityValue = ref("");
-const darkMode = ref(false);
 const supportEmail = ref("");
 
 // TE flag mode
@@ -236,9 +225,6 @@ const loadMenuData = async () => {
 
   firstName.value = first.value || "";
   identityValue.value = identity.value || "";
-    darkMode.value = themePref.value === "dark";
-
-  document.documentElement.classList.toggle("dark", darkMode.value);
 
   // Load Support Email
   if (sitePref.value) {
@@ -328,19 +314,6 @@ const loadMenuData = async () => {
 const firstLetter = computed(() => {
   return firstName.value ? firstName.value.charAt(0).toUpperCase() : "?";
 });
-
-// Dark Mode toggle
-const toggleDarkMode = async () => {
-  const newValue = !darkMode.value;
-  darkMode.value = newValue;
-
-  await Preferences.set({
-    key: "theme",
-    value: newValue ? "dark" : "light"
-  });
-
-  document.documentElement.classList.toggle("dark", newValue);  
-};
 
 // Placeholder under-construction popup
 const underConstruction = async () => {

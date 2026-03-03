@@ -49,8 +49,6 @@ const app = createApp(App)
 
 router.isReady().then(async () => {
   try {
-    const isDark = document.documentElement.classList.contains("dark");
-
     // Detect platform
     const platform = Capacitor.getPlatform();
 
@@ -58,18 +56,32 @@ router.isReady().then(async () => {
       // iPhone → overlay TRUE + transparent
       await StatusBar.setOverlaysWebView({ overlay: true });
       await StatusBar.setBackgroundColor({ color: '#00000000' }); // transparent
-      await StatusBar.setStyle({ style: isDark ? Style.Light : Style.Dark });
-      
     } else {
       // Android → overlay FALSE (Samsung default)
       await StatusBar.setOverlaysWebView({ overlay: false });
-      await StatusBar.setStyle({ style: isDark ? Style.Light : Style.Dark });
-      // DO NOT set background color → Samsung manages it
     }
 
   } catch (err) {
     console.log("StatusBar plugin not available", err);
   }
+
+  /* ===== DEBUG THEME ===== */
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+  // app starts with system theme
+  console.log(
+    'Initial theme:',
+    mediaQuery.matches ? 'Dark 🌙' : 'Light ☀️'
+  )
+
+  // Listen when system changes theme
+  mediaQuery.addEventListener('change', (e) => {
+    console.log(
+      'System theme changed:',
+      e.matches ? 'Dark 🌙' : 'Light ☀️'
+    )
+  })
+  /* ======================== */
 
   app.mount('#app');
 });
