@@ -21,40 +21,25 @@
 }
 
 /* ===== DARK MODE ===== */
-html.dark {
-  --ion-background-color: #121212;
-  --ion-background-color-rgb: 18, 18, 18;
-
-  --ion-text-color: #ffffff;
-  --ion-text-color-rgb: 255, 255, 255;
-
-  /* ===== Toolbar (Header) — vẫn tím trong dark mode ===== */
-  --ion-toolbar-background: #8e24aa;
-  --ion-toolbar-color: #ffffff;
-
-  /* Ion items */
-  --ion-item-background: #1f1f1f;
-  --ion-item-color: #ffffff;
-
-  /* Menu background */
-  --ion-menu-background: #1e1e1e;
-
-  --avatar-bg: #9567E0; /* darker purple */
-}
-
-/* Dark mode – stronger modal border */
-html.dark ion-modal {
-  --border-width: 1px;
-  --border-style: solid;
-  --border-color: rgba(255, 255, 255, 0.25);
-}
-
-/* 🔥 Kill iOS auto dark via media query */
 @media (prefers-color-scheme: dark) {
-  :root:not(.dark) {
-    --ion-background-color: #ffffff !important;
-    --ion-text-color: #000000 !important;
-    --ion-item-background: #ffffff !important;
+  :root {
+    --ion-background-color: #121212;
+    --ion-background-color-rgb: 18, 18, 18;
+
+    --ion-text-color: #ffffff;
+    --ion-text-color-rgb: 255, 255, 255;
+
+    --ion-toolbar-background: #8e24aa;
+    --ion-toolbar-color: #ffffff;
+
+    /* Ion items */
+    --ion-item-background: #1f1f1f;
+    --ion-item-color: #ffffff;
+
+    /* Menu background */
+    --ion-menu-background: #1e1e1e;
+
+    --avatar-bg: #9567E0; /* darker purple */
   }
 }
 
@@ -113,21 +98,28 @@ html {
   line-height: 1.35;
 }
 
-/* iOS dark mode ion-alert fix */
-html.dark ion-alert .alert-wrapper {
-  background: #1e1e1e !important;
-  color: #ffffff !important;
-}
+@media (prefers-color-scheme: dark) {
+  ion-modal {
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: rgba(255, 255, 255, 0.25);
+  }
 
-html.dark ion-alert .alert-head,
-html.dark ion-alert .alert-title {
-  color: #ffffff !important;
-}
+  ion-alert .alert-wrapper {
+    background: #1e1e1e !important;
+    color: #ffffff !important;
+  }
 
-html.dark ion-alert .alert-message {
-  color: #dddddd !important;
-}
+  ion-alert .alert-head,
+  ion-alert .alert-title {
+    color: #ffffff !important;
+  }
 
-html.dark ion-alert .alert-button {
-  color: var(--ion-color-primary) !important;
+  ion-alert .alert-message {
+    color: #dddddd !important;
+  }
+
+  ion-alert .alert-button {
+    color: var(--ion-color-primary) !important;
+  }
 }
