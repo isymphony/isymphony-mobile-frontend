@@ -165,6 +165,7 @@ import {
   IonButton,
   IonSpinner,
   IonPopover,
+  IonModal,
   IonDatetime,
 } from "@ionic/vue";
 import { Preferences } from "@capacitor/preferences";
