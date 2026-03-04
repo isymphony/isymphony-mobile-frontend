@@ -23,7 +23,7 @@
         </div>
 
       <!-- Weekend row -->
-      <ion-list>
+      <ion-list v-if="!initialLoading">
 
         <ion-item v-if="weekend" button :router-link="`/timesheet-clock-detail/${weekend}`" :detail="false">
 
