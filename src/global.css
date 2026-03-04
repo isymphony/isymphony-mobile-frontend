@@ -37,12 +37,21 @@ ion-input::part(native)::placeholder {
 }
 
 /* Dark mode override */
-html.dark ion-input::part(native) {
-  color: #ffffff !important;
-}
+@media (prefers-color-scheme: dark) {
 
-html.dark ion-input::part(native)::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+  ion-input::part(native) {
+    color: var(--ion-text-color) !important;
+  }
+
+  ion-input::part(native)::placeholder {
+    color: var(--ion-color-medium) !important;
+  }
+
+  ion-loading .loading-wrapper {
+    background: var(--ion-color-step-100) !important;
+    color: var(--ion-text-color) !important;
+  }
+
 }
 
 /* iOS ion-menu and ion-item*/
