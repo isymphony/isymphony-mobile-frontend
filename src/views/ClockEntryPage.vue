@@ -618,17 +618,18 @@ const confirmAssignment = async () => {
   margin-bottom: 10px;
   border-radius: 16px;
 
-  /* LIGHT MODE */
-  background: #ffffff;          /* <- Light mode card background */
+  background: #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.18);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* DARK MODE */
-html.dark .top-card {
-  background: #1e1e1e;          /* <- dark card background */
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+@media (prefers-color-scheme: dark) {
+  .top-card {
+    background: #1e1e1e;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+  }
 }
 
 .emp-name {
@@ -700,8 +701,10 @@ ion-item {
   --border-color: rgba(0,0,0,0.15);
 }
 
-html.dark ion-item {
-  --border-color: rgba(255,255,255,0.10); /* dark */
+@media (prefers-color-scheme: dark) {
+  ion-item {
+    --border-color: rgba(255,255,255,0.10);
+  }
 }
 
 ion-item ion-icon {
@@ -776,9 +779,11 @@ ion-item ion-icon {
 }
 
 /* ===== Dark mode ===== */
-html.dark .change-order-btn {
-  --background: #1f3f46;   /* dark teal */
-  --color: #8bd0e0;        /* light teal text */
+@media (prefers-color-scheme: dark) {
+  .change-order-btn {
+    --background: #1f3f46;
+    --color: #8bd0e0;
+  }
 }
 
 </style>

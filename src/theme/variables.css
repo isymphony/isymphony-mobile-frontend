@@ -7,8 +7,8 @@
   --ion-text-color-rgb: 0, 0, 0;
 
   /* ===== Toolbar (Header) — make it purple ===== */
-  --ion-toolbar-background: #8e24aa;   /* tím */
-  --ion-toolbar-color: #ffffff;        /* chữ & icon white */
+  --ion-toolbar-background: #8e24aa;
+  --ion-toolbar-color: #ffffff;
 
   /* List items */
   --ion-item-background: #ffffff;
@@ -40,6 +40,18 @@
     --ion-menu-background: #1e1e1e;
 
     --avatar-bg: #9567E0; /* darker purple */
+  }
+}
+
+ion-toolbar {
+  --background: #8e24aa;
+  --color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-toolbar {
+    --background: #8e24aa;
+    --color: #ffffff;
   }
 }
 
