@@ -1,19 +1,13 @@
 import axios from "axios";
 import { Capacitor } from "@capacitor/core";
-import { LOCAL_IP, API_TIMEOUT } from "../config/api.config";
+import { APP_API, API_TIMEOUT } from "../config/api.config";
 
-const isNative = Capacitor.isNativePlatform();
-
-const API_BASE_URL = isNative
-  ? `http://${LOCAL_IP}/isymphony_api/public/api`
-  : "http://localhost/isymphony_api/public/api";
-
-console.log("API Base URL:", API_BASE_URL);
+console.log("API Base URL:", APP_API);
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: APP_API,
   timeout: API_TIMEOUT,
 });
 
 export default api;
-export { API_BASE_URL };
+export { APP_API };
