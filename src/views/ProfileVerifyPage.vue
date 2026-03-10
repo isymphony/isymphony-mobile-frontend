@@ -48,7 +48,7 @@
       <ion-button
         expand="block"
         class="go-bottom-btn"
-        :disabled="isSubmitting"
+        :disabled="isSubmitting || !allowRetry"
         @click="onContinue"
       >
         <ion-spinner
@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import {
   IonPage,
   IonHeader,
@@ -99,6 +99,7 @@ const zipCode = ref('');
 const errorMessage = ref('');
 const firstInput = ref<any | null>(null);
 const isSubmitting = ref(false);
+const allowRetry = ref(true);
 
 onIonViewWillEnter(() => {
   identityType.value = route.query.type as 'email' | 'phone';
@@ -109,6 +110,7 @@ onIonViewWillEnter(() => {
   zipCode.value = '';
   errorMessage.value = '';
   isSubmitting.value = false;
+  allowRetry.value = true;
 });
 
 onMounted(() => {
@@ -126,6 +128,11 @@ onMounted(() => {
       input.setFocus();
     }
   }, 300);
+});
+
+watch([firstName, lastName, zipCode], () => {
+  allowRetry.value = true;
+  errorMessage.value = '';
 });
 
 const forceBlurAllInputs = () => {
@@ -179,6 +186,11 @@ const onContinue = async () => {
 
     if (!res.data.success) {
       errorMessage.value = res.data.message || "Request failed.";
+
+      if (errorMessage.value === "User not found with provided information") {
+        allowRetry.value = false;   // 🔒 lock button for this case
+      }
+
       isSubmitting.value = false;   // ✅ unlock button
       return;
     }
