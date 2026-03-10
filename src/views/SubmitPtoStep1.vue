@@ -407,11 +407,8 @@ const goNext = () => {
   margin-top: 16px;
   padding: 12px;
   border-radius: 14px;
-  background: var(--ion-item-background, #f4f5f8);
-}
-
-html.dark .calendar-card {
-  background: #1f1f1f;
+  border: 1px solid var(--ion-color-step-200);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 
 .calendar-header {
@@ -496,11 +493,7 @@ html.dark .calendar-card {
   padding: 8px 0;
   font-size: 14px;
 
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-html.dark .selected-date-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  border-bottom: 1px solid var(--ion-color-step-200);
 }
 
 .selected-date-text {
