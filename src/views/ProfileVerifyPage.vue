@@ -187,7 +187,9 @@ const onContinue = async () => {
     if (!res.data.success) {
       errorMessage.value = res.data.message || "Request failed.";
 
-      if (errorMessage.value === "User not found with provided information") {
+      //console.log("API error message:", errorMessage.value);
+
+      if (errorMessage.value === "User not found with provided information.") {
         allowRetry.value = false;   // 🔒 lock button for this case
       }
 
@@ -217,6 +219,12 @@ const onContinue = async () => {
         (err.response.data as any)?.message ?? "Server error.";
     } else {
       errorMessage.value = "Unable to connect to server.";
+    }
+
+    console.log("API error message:", errorMessage.value);
+
+    if (errorMessage.value === "User not found with provided information.") {
+      allowRetry.value = false;   // 🔒 lock button for this case
     }
 
     isSubmitting.value = false;   // ✅ unlock button on exception
