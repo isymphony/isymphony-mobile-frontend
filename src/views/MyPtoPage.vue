@@ -202,17 +202,14 @@ const showUnderConstruction = async () => {
   border-radius: 16px;
   text-align: center;
 
-  /* LIGHT MODE */
-  background: #ffffff;          /* <- Light mode card background */
-  border: 1px solid rgba(0, 0, 0, 0.18);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
+  background: var(--ion-color-step-50);
+  border: 1px solid var(--ion-color-step-150);
 
-/* DARK MODE */
-html.dark .pto-card {
-  background: #1e1e1e;          /* <- dark card background */
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
+  box-shadow:
+  0 6px 16px rgba(0,0,0,0.08),
+  inset 0 1px 0 rgba(255,255,255,0.05);
+
+  
 }
 
 .pto-card .label {
@@ -229,19 +226,6 @@ html.dark .pto-card {
 
 .pto-card.emphasis .value {
   color: rgb(146, 18, 163);
-}
-
-/* Light mode card */
-:host-context(.ios) .pto-card,
-:host-context(.md) .pto-card {
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-}
-
-/* Dark mode card */
-:host-context(.dark) .pto-card {
-  background: #1c1c1e; /* iOS dark surface */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
 }
 
 /* Unit */
