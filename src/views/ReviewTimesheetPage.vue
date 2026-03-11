@@ -398,18 +398,11 @@ const submitTimesheet = async () => {
   margin-bottom: 10px;
   border-radius: 16px;
 
-  /* LIGHT MODE */
-  background: #ffffff;          /* <- Light mode card background */
-  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-color-step-200);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* DARK MODE */
-html.dark .top-card {
-  background: #1e1e1e;          /* <- dark card background */
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
-}
 .top-card-content {
   font-size: 13px;
   margin-bottom: 4px;
@@ -418,12 +411,7 @@ html.dark .top-card {
 
 .day-block {
   padding: 14px 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-}
-
-/* Dark mode */
-html.dark .day-block {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid var(--ion-color-step-200);
 }
 
 .day-header {
@@ -483,20 +471,14 @@ html.dark .day-block {
 }
 
 .timesheet-status-btn {
-  --background: #bebebe;
-  --color: #3d3d3d;
+  --background: var(--ion-color-step-400);
+  --color: var(--ion-text-color);
   --border-radius: 10px;
   --box-shadow: none;
-  --opacity: 1; /* override Ionic default */
+  --opacity: 1;
   text-transform: none;
   font-weight: 600;
   cursor: default;
-}
-
-/* Dark mode */
-html.dark .timesheet-status-btn {
-  --background: #333333;
-  --color: #cfcfcf;
 }
 
 .status-text {
