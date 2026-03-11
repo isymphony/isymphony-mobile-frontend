@@ -184,10 +184,6 @@ const openTimesheet = (weekend: string) => {
   --border-color: var(--ion-color-step-200);
 }
 
-html.dark .week-list {
-  --ion-item-border-color: rgba(255, 255, 255, 0.22);
-}
-
 .weekend-line {
   font-size: 15px;
   font-weight: 600;
