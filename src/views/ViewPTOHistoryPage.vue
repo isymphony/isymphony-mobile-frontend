@@ -310,6 +310,7 @@
 
       </ion-content>
 
+      <!-- Time Picker Modal -->
       <ion-modal
         :is-open="showTimePicker"
         @didDismiss="showTimePicker = false"
@@ -321,7 +322,6 @@
           hour-cycle="h12"
           :prefer-wheel="true"
           mode="ios"
-          color-scheme="auto"
           v-model="editStartTime"
         />
       </ion-modal>
@@ -884,14 +884,10 @@ const editModalStyle = computed(() => {
 }
 
 .pto-item {
-  display: flex;              /* 🔑 key line */
-  align-items: flex-start;    /* icons stick to top */
+  display: flex;
+  align-items: flex-start;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-html.dark .pto-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.1));
 }
 
 .row {
@@ -946,16 +942,6 @@ html.dark .pto-item {
 
 .pto-content {
   flex: 1;
-}
-
-.chevron-icon {
-  font-size: 20px;
-  color: var(--ion-color-medium);
-  margin-left: 8px;
-}
-
-html.dark .chevron-icon {
-  color: rgba(255, 255, 255, 0.4);
 }
 
 .action-icons {
@@ -1055,26 +1041,11 @@ html.dark .chevron-icon {
   --border-radius: 10px;
 }
 
-/* Light mode */
 .comments-input-item ion-textarea {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  background: var(--ion-item-background, #ffffff);
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.25));
   border-radius: 10px;
   padding: 10px;
-}
-
-/* Dark mode */
-html.dark .comments-input-item ion-textarea {
-  background: #1f1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.comments-input-item ion-textarea {
-  --padding-start: 6px;
-  --padding-end: 6px;
-  --padding-top: 6px;
-  --padding-bottom: 6px;
-  line-height: 1.4;
 }
 
 .editpto-modal {
@@ -1113,13 +1084,8 @@ ion-modal.editpto-modal::part(content) {
   border-radius: 12px;
 
   background: var(--ion-item-background, #f4f5f8);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.15));
   cursor: pointer;
-}
-
-html.dark .start-time-row {
-  background: #1f1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 .start-time-label {
@@ -1148,7 +1114,7 @@ html.dark .start-time-row {
 .edit-input {
   --background: transparent;
   background: var(--ion-item-background, #f4f5f8);
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.15));
   border-radius: 12px;
 
   padding: 10px 0px;
@@ -1156,17 +1122,6 @@ html.dark .start-time-row {
 
   display: flex;
   align-items: center;
-}
-
-.edit-input::part(native) {
-  min-height: 0px;
-  padding: 10;
-  align-items: center;
-}
-
-html.dark .edit-input {
-  background: #1f1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
 /* Remove default ion-item padding */
@@ -1201,13 +1156,8 @@ html.dark .edit-input {
   align-items: center;
 
   background: var(--ion-item-background, #f4f5f8);
-  border: 1px solid rgba(0,0,0,.15);
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,.15));
   border-radius: 12px;
-}
-
-html.dark .hours-input {
-  background: #1f1f1f;
-  border: 1px solid rgba(255,255,255,.25);
 }
 
 .native-input {
@@ -1220,77 +1170,115 @@ html.dark .hours-input {
   color: var(--ion-text-color);
   line-height: 1.4;
 }
-
 </style>
 
 <style>
-/* ============ Small centered modal like a popover ============ */
 ion-modal.time-picker-modal {
   --width: 220px;
-  --height: 220px;
+  --height: 200px;
   --border-radius: 16px;
   --box-shadow: 0 12px 32px rgba(0,0,0,0.4);
   --backdrop-opacity: 0.35;
-
-  /* IMPORTANT: use ionic var, not background property */
-  --background: #ffffff;
 }
 
-/* center modal content (safe) */
-ion-modal.time-picker-modal::part(content) {
-  display: grid;
-  place-items: center;
-  overflow: hidden; /* avoid wheel bleeding */
-}
-
-/* make datetime fill nicely */
 ion-modal.time-picker-modal ion-datetime {
-  width: 100%;
   height: 100%;
-  --background: transparent;
 }
 
-
-/* ============ DARK MODE (match both html.dark and body.dark) ============ */
-:is(html.dark, body.dark) ion-modal.time-picker-modal {
-  --background: #1f1f1f;
+ion-modal.time-picker-modal ion-datetime::part(wheel-item active) {
+  color: var(--ion-color-primary);
 }
 
-/* Force iOS wheel to dark using supported vars + parts */
-:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime {
-  --background: transparent;
-  --wheel-fade-background-rgb: 31, 31, 31;
-  --wheel-highlight-background: rgba(255, 255, 255, 0.10);
-  --wheel-highlight-border-radius: 10px;
+@media (prefers-color-scheme: dark) {
 
-  color-scheme: dark;
-}
+  /* ===== Edit PTO modal ===== */
+  ion-modal.editpto-modal {
+    --background: #1f1f1f;
+    --ion-item-background: #2a2a2a;
+    --ion-text-color: #ffffff;
+  }
 
-/* These parts are the most reliable for “only selected row visible” bug */
-:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(wheel-item) {
-  color: rgba(255,255,255,0.35);
-}
+  ion-modal.editpto-modal::part(content) {
+    background: #1f1f1f !important;
+    border: 1px solid rgba(255,255,255,0.18);
+  }
 
-:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(wheel-item-active) {
-  color: #ffffff;
-}
+  ion-modal.editpto-modal ion-content {
+    --background: #1f1f1f !important;
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+  }
 
-/* Optional: if buttons exist (some platforms hide them) */
-:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(buttons) {
-  background: #1f1f1f;
-}
-:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(cancel-button),
-:is(html.dark, body.dark) ion-modal.time-picker-modal ion-datetime::part(confirm-button) {
-  color: #ffffff;
-}
+  /* Text inside Edit PTO modal */
+  ion-modal.editpto-modal .all-modal-title,
+  ion-modal.editpto-modal .start-time-value,
+  ion-modal.editpto-modal .native-input,
+  ion-modal.editpto-modal .edit-field-label,
+  ion-modal.editpto-modal .modal-row strong {
+    color: #ffffff !important;
+  }
 
-/* Light mode border */
-ion-modal.time-picker-modal::part(content) {
-  border: 1px solid rgba(0, 0, 0, 0.15);
-}
+  ion-modal.editpto-modal .modal-row,
+  ion-modal.editpto-modal .start-time-label {
+    color: rgba(255,255,255,0.72) !important;
+  }
 
-/* Dark mode border */
-:is(html.dark, body.dark) ion-modal.time-picker-modal::part(content) {
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  /* Inputs inside Edit PTO modal */
+  ion-modal.editpto-modal .edit-input,
+  ion-modal.editpto-modal .hours-input {
+    background: #2a2a2a !important;
+    border: 1px solid rgba(255,255,255,0.22) !important;
+  }
+
+  ion-modal.editpto-modal ion-textarea,
+  ion-modal.editpto-modal textarea {
+    color: #ffffff !important;
+  }
+
+  /* ===== Time picker modal ===== */
+  ion-modal.time-picker-modal {
+    --box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    --backdrop-opacity: 0.35;
+    --background: #1f1f1f !important;
+  }
+
+  ion-modal.time-picker-modal::part(content) {
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #1f1f1f !important;
+    border: 1px solid rgba(255,255,255,0.18);
+  }
+
+  ion-modal.time-picker-modal ion-datetime {
+    width: 100%;
+    height: 100%;
+    --background: #1f1f1f !important;
+    --color: rgba(255,255,255,0.85);
+
+    --wheel-fade-background-rgb: 31,31,31;
+    --wheel-highlight-background: rgba(255,255,255,0.10);
+    --wheel-highlight-border-radius: 10px;
+
+    color: #ffffff !important;
+    color-scheme: dark;
+  }
+
+  ion-modal.time-picker-modal ion-datetime::part(wheel-item) {
+    color: rgba(255,255,255,0.8);
+  }
+
+  ion-modal.time-picker-modal ion-datetime::part(wheel-item active) {
+    color: var(--ion-color-primary);
+  }
+
+  ion-modal.time-picker-modal ion-datetime::part(buttons) {
+    background: #1f1f1f;
+  }
+
+  ion-modal.time-picker-modal ion-datetime::part(cancel-button),
+  ion-modal.time-picker-modal ion-datetime::part(confirm-button) {
+    color: #ffffff;
+  }
 }
 </style>
