@@ -17,14 +17,14 @@
       spinner="crescent"
     />
 
-    <ion-content class="ion-padding" v-if="pageLoaded">
+    <ion-content class="ion-padding">
       <!-- Pull to refresh -->
       <ion-refresher slot="fixed" @ionRefresh="doRefresh">
         <ion-refresher-content />
       </ion-refresher>
 
       <!-- ===== Week List ===== -->
-      <ion-list class="week-list">
+      <ion-list v-if="weeks.length > 0" class="week-list">
         <ion-item
           v-for="w in weeks"
           :key="w.weekend"
@@ -46,7 +46,7 @@
           </ion-label>
 
           <div class="hours-col">
-            {{ w.total_hours.toFixed(2) }} hrs
+            {{ (w.total_hours ?? 0).toFixed(2) }} hrs
           </div>
 
           <ion-icon
@@ -58,7 +58,7 @@
       </ion-list>
 
       <!-- Empty -->
-      <div v-if="weeks.length === 0" class="empty">
+      <div v-if="pageLoaded && weeks.length === 0" class="empty">
         No pending timesheets
       </div>
     </ion-content>
@@ -110,11 +110,28 @@ onIonViewWillEnter(async () => {
 const loadPending = async () => {
   pageLoaded.value = false;
 
-  const token = await Preferences.get({ key: "authToken" });
-  const sitePref = await Preferences.get({ key: "siteName" });
-  const userIdPref = await Preferences.get({ key: "userId" });
-  const clientIdPref = await Preferences.get({ key: "clientId" });
-  const weekEndingDayPref = await Preferences.get({ key: "weekEndingDay" });
+  const [
+    token,
+    sitePref,
+    userIdPref,
+    clientIdPref,
+    weekEndingDayPref
+  ] = await Promise.all([
+    Preferences.get({ key: "authToken" }),
+    Preferences.get({ key: "siteName" }),
+    Preferences.get({ key: "userId" }),
+    Preferences.get({ key: "clientId" }),
+    Preferences.get({ key: "weekEndingDay" })
+  ]);
+
+  /*
+  console.log("Loading pending timesheets with", {
+    site: sitePref.value,
+    userId: userIdPref.value,
+    clientId: clientIdPref.value,
+    weekEndingDay: weekEndingDayPref.value
+  });
+  */
 
   try {
     const res = await api.post(
@@ -134,7 +151,7 @@ const loadPending = async () => {
     );
 
     if (res.data.success) {
-      weeks.value = res.data.weeks;
+      weeks.value = res.data.weeks ?? [];
     }
   } catch (err) {
     console.error("Failed to load pending timesheets", err);
@@ -164,7 +181,7 @@ const openTimesheet = (weekend: string) => {
 
 /* Divider clarity */
 .week-list {
-  --ion-item-border-color: rgba(0, 0, 0, 0.15);
+  --border-color: var(--ion-color-step-200);
 }
 
 html.dark .week-list {
@@ -183,8 +200,9 @@ html.dark .week-list {
 
 .hours-col {
   font-size: 14px;
-  font-weight: 500;
   margin-right: 8px;
+  font-weight: 600;
+  color: var(--ion-text-color);
 }
 
 .empty {
