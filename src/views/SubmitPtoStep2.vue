@@ -6,7 +6,7 @@
         <ion-buttons slot="start">
           <ion-back-button default-href="/submit-pto-step1" text="Back" class="back-button" />
         </ion-buttons>
-        <ion-title>{{ pageTitle }}</ion-title>
+        <ion-title>Submit PTO</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -18,7 +18,19 @@
       <div v-else>
         <!-- Intro -->
         <div class="intro-text">
-          Please enter hours and any comments for the selected dates.
+          Enter hours and any comments for the selected dates.
+        </div>
+
+        <!-- Order row -->
+        <div class="order-row">
+          <div class="order-label">Order Number</div>
+
+          <div class="order-value">
+            {{ selectedAssignment.order_number }}
+            <span v-if="selectedAssignment.type_location">
+              - {{ selectedAssignment.type_location }}
+            </span>
+          </div>
         </div>
 
         <!-- Cards -->
@@ -226,13 +238,6 @@ const activeTimeProxy = computed({
     if (i === null) return;
     cards.value[i].startTime = normalizeTime(v);
   },
-});
-
-const pageTitle = computed(() => {
-  const a = selectedAssignment.value;
-  if (!a) return "Submit PTO";
-  const orderText = a.order_number;
-  return `Submit PTO - Order #${orderText}`;
 });
 
 onIonViewWillEnter (async () => {
@@ -535,7 +540,30 @@ const formatTime = (time: string) => {
 .intro-text {
   font-size: 14px;
   color: var(--ion-color-medium);
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+}
+
+/* Order row */
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  border-bottom: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.12));
+  margin-bottom: 15px;
+}
+
+.order-label {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+}
+
+.order-value {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 550;
 }
 
 .cards-wrap {
@@ -547,21 +575,10 @@ const formatTime = (time: string) => {
 .day-card {
   padding: 14px;
   border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-}
 
-/* Light mode */
-html:not(.dark) .day-card {
-  background: #ffffff;
-  border: 1px solid rgba(0,0,0,0.14);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-/* Dark mode */
-html.dark .day-card {
-  background: #1f1f1f;
-  border: 1px solid rgba(255,255,255,0.18);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background: var(--ion-color-step-50, var(--ion-item-background, #ffffff));
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.14));
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .day-card.active {
@@ -594,8 +611,8 @@ html.dark .day-card {
 
 .field-input {
   border-radius: 12px;
-  border: 1px solid rgba(0,0,0,0.15);
-  background: #ffffff;
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.15));
+  background: var(--ion-item-background, #ffffff);
   padding: 10px 12px;
   min-height: 44px;
   display: flex;
@@ -606,11 +623,6 @@ html.dark .day-card {
   min-height: 0px;
   padding: 10;
   align-items: center;
-}
-
-html.dark .field-input {
-  background: #1f1f1f;
-  border: 1px solid rgba(255,255,255,0.25);
 }
 
 .field-input.clickable {
@@ -651,13 +663,8 @@ ion-textarea {
   align-items: center;
 
   background: var(--ion-item-background, #f4f5f8);
-  border: 1px solid rgba(0,0,0,.15);
+  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,.15));
   border-radius: 12px;
-}
-
-html.dark .hours-input {
-  background: #1f1f1f;
-  border: 1px solid rgba(255,255,255,.25);
 }
 
 .native-input {
@@ -684,20 +691,12 @@ html.dark .hours-input {
   margin-top: 4px;
 }
 
-html.dark .time-sheet {
-  color-scheme: dark;
-}
-
-html.dark ion-datetime {
-  color-scheme: dark;
-}
-
-html.dark {
-  color-scheme: dark;
-}
-
-html.dark .time-datetime {
-  color-scheme: dark;
+@media (prefers-color-scheme: dark) {
+  .time-sheet,
+  .time-datetime,
+  ion-datetime {
+    color-scheme: dark;
+  }
 }
 
 .error-text {
@@ -718,67 +717,46 @@ html.dark .time-datetime {
 </style>
 
 <style>
-/* ===== Time sheet dark mode (iOS) ===== */
-body.dark ion-modal.time-sheet::part(content) {
-  background: #1f1f1f !important;
-  color: #ffffff !important;
-}
+@media (prefers-color-scheme: dark) {
+  ion-modal.time-sheet {
+    --background: #1f1f1f !important;
+    color-scheme: dark;
+  }
 
-/* ion-datetime uses its own internal wheel backgrounds */
-body.dark ion-modal.time-sheet ion-datetime {
-  --background: #1f1f1f;
-  --color: #ffffff;
+  ion-modal.time-sheet::part(content) {
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+  }
 
-  /* wheel fade + highlight (important on iOS) */
-  --wheel-fade-background-rgb: 31, 31, 31;
-  --wheel-highlight-background: rgba(255, 255, 255, 0.08);
-  --wheel-highlight-border-radius: 10px;
+  ion-modal.time-sheet ion-content {
+    --background: #1f1f1f !important;
+    background: #1f1f1f !important;
+    color: #ffffff !important;
+  }
 
-  color-scheme: dark;
-}
+  ion-modal.time-sheet ion-datetime {
+    --background: #1f1f1f !important;
+    --color: #ffffff !important;
 
-/* Optional: make buttons visible */
-body.dark ion-modal.time-sheet ion-datetime::part(buttons) {
-  background: #1f1f1f;
-}
-body.dark ion-modal.time-sheet ion-datetime::part(cancel-button),
-body.dark ion-modal.time-sheet ion-datetime::part(confirm-button) {
-  color: #ffffff;
-}
+    --wheel-fade-background-rgb: 31, 31, 31;
+    --wheel-highlight-background: rgba(255, 255, 255, 0.08);
+    --wheel-highlight-border-radius: 10px;
 
-/* ===== Time-sheet modal: force correct background on iOS dark mode ===== */
-/* match both html.dark and body.dark */
-html.dark ion-modal.time-sheet,
-body.dark ion-modal.time-sheet {
-  --background: #1f1f1f !important;
-  color-scheme: dark;
-}
+    color: #ffffff !important;
+    color-scheme: dark;
+  }
 
-/* ion-content inside modal must also be forced */
-html.dark ion-modal.time-sheet ion-content,
-body.dark ion-modal.time-sheet ion-content {
-  --background: #1f1f1f !important;
-  background: #1f1f1f !important;
-  color: #ffffff !important;
-}
+  ion-modal.time-sheet ion-datetime::part(buttons) {
+    background: #1f1f1f;
+  }
 
-/* ion-datetime wheel */
-html.dark ion-modal.time-sheet ion-datetime,
-body.dark ion-modal.time-sheet ion-datetime {
-  --background: #1f1f1f !important;
-  --color: #ffffff !important;
+  ion-modal.time-sheet ion-datetime::part(cancel-button),
+  ion-modal.time-sheet ion-datetime::part(confirm-button) {
+    color: #ffffff;
+  }
 
-  --wheel-fade-background-rgb: 31, 31, 31;
-  --wheel-highlight-background: rgba(255, 255, 255, 0.08);
-  --wheel-highlight-border-radius: 10px;
-
-  color: #ffffff !important;
-  color-scheme: dark;
-}
-
-/* optional: make the grabber/handle visible */
-html.dark ion-modal.time-sheet::part(handle),
-body.dark ion-modal.time-sheet::part(handle) {
-  color: rgba(255,255,255,0.6);
+  ion-modal.time-sheet::part(handle) {
+    color: rgba(255,255,255,0.6);
+  }
 }
 </style>

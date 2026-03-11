@@ -385,7 +385,7 @@ const goNext = () => {
   justify-content: space-between;
   align-items: center;
   padding: 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.12));
   cursor: pointer;
 }
 
