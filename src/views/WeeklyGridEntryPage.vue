@@ -4,7 +4,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start"><ion-menu-button /></ion-buttons>
-        <ion-title>Weekly Grid Entry</ion-title>
+        <ion-title>Timesheet Entry</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -14,7 +14,7 @@
       spinner="crescent"
     />
 
-    <ion-content class="ion-padding" v-if="pageReady">
+    <ion-content class="ion-padding" v-if="pageReady" @touchstart="onTouchStart" @touchend="onTouchEnd">
       <!-- Pull to Refresh -->
       <ion-refresher slot="fixed" @ionRefresh="doRefresh">
         <ion-refresher-content />
@@ -24,20 +24,16 @@
       <div class="top-card">
         <h2 class="emp-name">{{ userFirstName }}'s Weekly Hours</h2>
 
-        <div class="job-line" v-if="activeAssignment">
-          Order <strong>#{{ activeAssignment.order_number }}</strong>
-          <span v-if="activeAssignment.type_location">
-            - {{ activeAssignment.type_location }}
-          </span>
-        </div>
-
         <div class="job-line">
           Timesheet Status:
           <strong class="status-text">{{ timesheetStatus }}</strong>
         </div>
 
-        <div class="week-ending" v-if="weekendDisplay">
-          Weekend: <strong>{{ weekendDisplay }}</strong>
+        <div class="job-line" v-if="activeAssignment">
+          Order <strong>#{{ activeAssignment.order_number }}</strong>
+          <span v-if="activeAssignment.type_location">
+            - {{ activeAssignment.type_location }}
+          </span>
         </div>
 
         <ion-button
@@ -47,6 +43,30 @@
         >
           Change Order
         </ion-button>
+
+        <div class="week-nav">
+
+          <ion-icon
+            :icon="chevronBackOutline"
+            class="week-nav-icon"
+            :class="{ disabled: !canGoPrevious }"
+            @click="goPreviousWeek"
+          />
+
+
+          <div class="week-ending" v-if="weekendDisplay">
+            Weekend: <strong>{{ weekendDisplay }}</strong>
+          </div>
+
+          <ion-icon
+            :icon="chevronForwardOutline"
+            class="week-nav-icon"
+            :class="{ disabled: !canGoNext }"
+            @click="goNextWeek"
+          />
+
+        </div>
+
       </div>
 
       <!-- Shortcuts -->
@@ -276,7 +296,7 @@ import { ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { Preferences } from "@capacitor/preferences";
 import api from "@/services/api";
-import { chatbubbleOutline, checkmarkOutline } from "ionicons/icons";
+import { chatbubbleOutline, checkmarkOutline, chevronBackOutline, chevronForwardOutline } from "ionicons/icons";
 
 /** ---------- Types ---------- */
 interface Assignment {
@@ -321,6 +341,8 @@ const timesheetStatus = ref<string>("New Timesheet");
 const weekEndingDay = ref<string>("Saturday");
 const weekend = ref<string>(""); // YYYY-MM-DD
 const weekendDisplay = ref<string>("");
+const pendingWeekends = ref<string[]>([]);
+const currentWeekendIndex = ref(-1);
 
 const weekDays = ref<GridDay[]>([]);
 
@@ -333,6 +355,14 @@ const showUnsavedAlert = ref(false);
 
 const canReviewTimesheet = computed(() => {
   return !isDirty.value;
+});
+
+const canGoPrevious = computed(() => {
+  return currentWeekendIndex.value < pendingWeekends.value.length - 1;
+});
+
+const canGoNext = computed(() => {
+  return currentWeekendIndex.value > 0;
 });
 
 /** ---------- Date helpers (timezone-safe) ---------- */
@@ -426,6 +456,44 @@ const initWeekend = () => {
 
   calculateWeekendFromToday(weekEndingDay.value);
   setWeekendDisplay();
+};
+
+const loadPendingWeekends = async () => {
+
+  const token = await Preferences.get({ key: "authToken" });
+  const sitePref = await Preferences.get({ key: "siteName" });
+  const userIdPref = await Preferences.get({ key: "userId" });
+  const clientIdPref = await Preferences.get({ key: "clientId" });
+  const weekEndingDayPref = await Preferences.get({ key: "weekEndingDay" });
+
+  const res = await api.post(
+    "/pending-timesheets",
+    {
+      site_name: sitePref.value,
+      client_id: Number(clientIdPref.value),
+      user_id: Number(userIdPref.value),
+      week_ending_day: weekEndingDayPref.value || "Saturday"
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        Accept: "application/json"
+      }
+    }
+  );
+
+  if (res.data.success) {
+    pendingWeekends.value = res.data.weeks.map((w: any) => w.weekend);
+
+    const idx = pendingWeekends.value.indexOf(weekend.value);
+
+    if (idx >= 0) {
+      currentWeekendIndex.value = idx;
+    } else {
+      currentWeekendIndex.value = 0;
+    }
+  }
+  //console.log("Pending weekends:", pendingWeekends.value, "Current index:", currentWeekendIndex.value);
 };
 
 /** ---------- Build grid ---------- */
@@ -667,7 +735,7 @@ const saveWeek = async () => {
           site_name: sitePref.value,
           client_id: Number(clientIdPref.value),
           user_id: Number(userIdPref.value),
-          assignment_id: Number(assignmentIdPref.value),
+          assignment_id: Number(activeAssignment.value.assignment_id),
           order_number: activeAssignment.value.order_number,
           timesheet_bill_date: d.date,
           week_ending_date: weekend.value,
@@ -694,7 +762,7 @@ const saveWeek = async () => {
 const openAssignmentModal = () => {
 
   if (isDirty.value) {
-    showUnsavedWarning();
+    showUnsavedWarning(openAssignmentModal);
     return;
   }
 
@@ -707,6 +775,8 @@ const closeAssignmentModal = () => {
   showAssignmentModal.value = false;
 };
 
+let pendingAction: (() => void) | null = null;
+
 const unsavedAlertButtons = [
   {
     text: "Cancel",
@@ -716,15 +786,19 @@ const unsavedAlertButtons = [
     text: "Discard Changes",
     handler: () => {
       isDirty.value = false;
-      openAssignmentModal(); // retry
+
+      if (pendingAction) {
+        pendingAction();
+        pendingAction = null;
+      }
     }
   }
 ];
 
-const showUnsavedWarning = () => {
+const showUnsavedWarning = (action?: () => void) => {
+  pendingAction = action || null;
   showUnsavedAlert.value = true;
 };
-
 
 const onAssignmentDismiss = () => {
   showAssignmentModal.value = false;
@@ -801,6 +875,7 @@ const loadPageData = async () => {
 
     // init weekend
     initWeekend();
+    await loadPendingWeekends();
     buildGrid();
 
     // resolve assignment (NO fallback)
@@ -816,7 +891,7 @@ const loadPageData = async () => {
 
     pageReady.value = true;
   } catch (err) {
-    console.error("WeeklyGridEntry load error:", err);
+    console.error("Timesheet Entry load error:", err);
     pageReady.value = true;
   } finally {
     loading.value = false;
@@ -892,36 +967,106 @@ const goToReviewTimesheet = () => {
   });
 };
 
+const goPreviousWeek = async () => {
+
+  if (isDirty.value) {
+    showUnsavedWarning(goPreviousWeek);
+    return;
+  }
+
+  if (!canGoPrevious.value) return;
+
+  currentWeekendIndex.value++;
+
+  weekend.value = pendingWeekends.value[currentWeekendIndex.value];
+
+  setWeekendDisplay();
+
+  buildGrid();
+
+  await loadWeekHours();
+};
+
+const goNextWeek = async () => {
+
+  if (isDirty.value) {
+    showUnsavedWarning(goNextWeek);
+    return;
+  }
+
+  if (!canGoNext.value) return;
+
+  currentWeekendIndex.value--;
+
+  weekend.value = pendingWeekends.value[currentWeekendIndex.value];
+
+  setWeekendDisplay();
+
+  buildGrid();
+
+  await loadWeekHours();
+};
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+const onTouchStart = (e: TouchEvent) => {
+  touchStartX = e.changedTouches[0].screenX;
+};
+
+const onTouchEnd = (e: TouchEvent) => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+};
+
+const handleSwipe = () => {
+
+  const swipeDistance = touchEndX - touchStartX;
+
+  const threshold = 60; // minimum swipe distance
+
+  if (Math.abs(swipeDistance) < threshold) {
+    return;
+  }
+
+  // swipe left
+  if (swipeDistance < 0 && canGoNext.value) {
+    goNextWeek();
+  }
+
+  // swipe right
+  if (swipeDistance > 0 && canGoPrevious.value) {
+    goPreviousWeek();
+  }
+};
+
 </script>
 
 <style scoped>
-/* Top card (match your style system) */
 .top-card {
   padding: 15px;
   margin-top: 0;
   margin-bottom: 10px;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-color-step-300);
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
-html.dark .top-card {
-  background: #1e1e1e;
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 4px 12px rgba(255,255,255,0.05);
-}
-
 .emp-name {
   font-size: 20px;
   font-weight: 700;
   margin: 0 0 10px 0;
   color: var(--ion-text-color);
 }
-.job-line,
-.week-ending {
+.job-line{
   font-size: 13px;
   color: var(--ion-color-medium);
   margin-bottom: 6px;
+}
+
+.week-ending {
+  font-size: 13px;
+  color: var(--ion-color-medium);
 }
 
 .change-order-btn {
@@ -935,39 +1080,29 @@ html.dark .top-card {
   text-transform: none;
   margin-top: 6px;
 }
-html.dark .change-order-btn {
-  --background: #1f3f46;
-  --color: #8bd0e0;
-}
 
 /* Shortcuts */
 .shortcut-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1.1fr 1.1fr 1fr;
   gap: 5px;
   margin: 10px 0 10px 0;
 }
+
 .shortcut-btn {
   text-transform: none;
-  font-size: 12px;
-  --border-color: rgba(0,0,0,0.2);
+  font-size: 14px;
+  font-weight: 550;
+  --border-color: var(--ion-color-step-300);
   --color: var(--ion-color-medium);
-}
-
-html.dark .shortcut-btn {
-  --border-color: rgba(255,255,255,0.25);
 }
 
 .shortcut-btn.danger {
   --color: #9c2828;
 }
 
-/* Grid list */
 .grid-list {
-  --ion-item-border-color: rgba(0,0,0,0.12);
-}
-html.dark .grid-list {
-  --ion-item-border-color: rgba(255,255,255,0.18);
+  --ion-item-border-color: var(--ion-color-step-300);
 }
 
 .grid-item {
@@ -1062,6 +1197,31 @@ ion-button[disabled] {
   color: rgb(146, 18, 163);
   font-weight: 600;
 }
+
+.comments-input-item ion-textarea {
+  background: var(--ion-item-background);
+  border: 1px solid var(--ion-color-step-300);
+  border-radius: 10px;
+  padding: 0px;
+
+}
+
+.week-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.week-nav-icon {
+  font-size: 22px;
+  color: var(--ion-color-primary);
+  cursor: pointer;
+}
+
+.week-nav-icon.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
 </style>
 
 <style>
@@ -1141,19 +1301,5 @@ ion-button[disabled] {
 .comments-input-item {
   --background: transparent;
   --border-radius: 10px;
-}
-
-/* Light mode */
-.comments-input-item ion-textarea {
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
-  padding: 10px;
-}
-
-/* Dark mode */
-html.dark .comments-input-item ion-textarea {
-  background: #1f1f1f;
-  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 </style>
