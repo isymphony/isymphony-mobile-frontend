@@ -4,7 +4,7 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="backPath" text="Back" class="back-button" />
+          <ion-back-button default-href="/weekly-grid-entry" text="Back" class="back-button" />
         </ion-buttons>
         <ion-title>Review Timesheet</ion-title>
       </ion-toolbar>
@@ -305,17 +305,6 @@ const doRefresh = async (event: any) => {
   await loadReview();
   event.target.complete();
 };
-
-const backPath = computed(() => {
-  const from = route.query.from;
-
-  if (from === "weekly-grid") {
-    return "/weekly-grid-entry";
-  }
-
-  // default
-  return "/hour-entry";
-});
 
 // Navigate back to modify timesheet
 const goModifyTimesheet = () => {
