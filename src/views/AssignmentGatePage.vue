@@ -86,7 +86,7 @@ const nextTarget = route.query.next as string || 'home';
 
 const nextPageMap: Record<string, string> = {
   clockEntry: '/clock-entry',
-  hourEntry:  '/hour-entry'
+  hourEntry:  '/weekly-grid-entry'
 };
 
 // ---------------------------

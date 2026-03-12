@@ -167,7 +167,7 @@ const doRefresh = async (event: any) => {
 
 const openTimesheet = (weekend: string) => {
   router.push({
-    path: "/hour-entry",
+    path: "/weekly-grid-entry",
     query: { weekend }
   });
 };
