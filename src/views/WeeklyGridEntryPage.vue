@@ -189,6 +189,7 @@
     :is-open="showCommentModal"
     @didDismiss="closeCommentModal"
     class="comment-modal"
+    mode="md"
     >
     <ion-content class="ion-padding">
         <div class="all-modal-title">
@@ -222,7 +223,7 @@
     </ion-modal>
 
     <!-- ======= ASSIGNMENT MODAL ======= -->
-    <ion-modal :is-open="showAssignmentModal" @didDismiss="onAssignmentDismiss" class="assignment-modal">
+    <ion-modal :is-open="showAssignmentModal" @didDismiss="onAssignmentDismiss" class="assignment-modal" mode="md">
       <ion-content class="ion-padding">
         <div class="all-modal-title">
           Select Order Number
@@ -1219,14 +1220,6 @@ ion-button[disabled] {
   font-weight: 600;
 }
 
-.comments-input-item ion-textarea {
-  background: var(--ion-item-background);
-  border: 1px solid var(--ion-color-step-300);
-  border-radius: 10px;
-  padding: 0px;
-
-}
-
 .week-nav {
   display: flex;
   justify-content: space-between;
@@ -1272,7 +1265,7 @@ ion-button[disabled] {
 }
 
 .comment-icon {
-  font-size: 18px;
+  font-size: 20px;
   margin-left: 10px;
   color: var(--ion-color-medium);
 }
@@ -1319,8 +1312,56 @@ ion-button[disabled] {
   padding: 12px 14px 14px 14px;
 }
 
+.comment-modal,
+.assignment-modal {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
+}
+
+.comment-modal::part(content),
+.assignment-modal::part(content) {
+  background: var(--ion-background-color);
+  color: var(--ion-text-color);
+  border: 1px solid var(--ion-color-step-300);
+}
+
+.comment-modal ion-content,
+.assignment-modal ion-content {
+  --background: var(--ion-background-color);
+  --color: var(--ion-text-color);
+}
+
+.assignment-modal ion-list {
+  background: transparent;
+}
+
+.assignment-modal ion-item {
+  --background: var(--ion-item-background);
+  --color: var(--ion-text-color);
+  --border-color: var(--ion-color-step-300);
+}
+
 .comments-input-item {
-  --background: transparent;
-  --border-radius: 10px;
+  --background: var(--ion-item-background);
+  --color: var(--ion-text-color);
+
+  --border-width: 0;
+  --inner-border-width: 0;
+
+  border: 1px solid var(--ion-color-step-300);
+  border-radius: 10px;
+
+  padding: 2px 0;
+}
+
+.comments-input-item ion-textarea {
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+.all-modal-title {
+  color: var(--ion-text-color);
 }
 </style>
