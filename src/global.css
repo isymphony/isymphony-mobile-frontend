@@ -65,6 +65,12 @@ ion-input::part(native)::placeholder {
     opacity: 0.35;
   }
 
+  ion-modal {
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: rgba(255,255,255,0.15);
+  }
+
 }
 
 /* iOS ion-menu and ion-item*/
@@ -127,23 +133,6 @@ ion-toggle {
   --background: #1c1c1e;
   --spinner-color: #ffffff;
   --color: #ffffff;
-}
-
-/* =====================================================
-   iOS Modal – FORCE light / dark mode correctly
-   ===================================================== */
-/* LIGHT MODE (iOS) */
-.ios:not(.dark) ion-modal {
-  --ion-background-color: #ffffff;
-  --ion-text-color: #000000;
-  --ion-color-step-50: #f2f2f2;
-  --ion-color-step-100: #e6e6e6;
-}
-
-/* DARK MODE (iOS) */
-.ios.dark ion-modal {
-  --ion-background-color: #1c1c1e;
-  --ion-text-color: #ffffff;
 }
 
 /* ===============================
