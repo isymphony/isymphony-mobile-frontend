@@ -976,15 +976,25 @@ const goPreviousWeek = async () => {
 
   if (!canGoPrevious.value) return;
 
-  currentWeekendIndex.value++;
+  loading.value = true;
 
-  weekend.value = pendingWeekends.value[currentWeekendIndex.value];
+  try {
 
-  setWeekendDisplay();
+    currentWeekendIndex.value++;
 
-  buildGrid();
+    weekend.value = pendingWeekends.value[currentWeekendIndex.value];
 
-  await loadWeekHours();
+    setWeekendDisplay();
+
+    buildGrid();          // reset grid immediately
+
+    await loadWeekHours(); // call API
+
+  } finally {
+
+    loading.value = false;
+
+  }
 };
 
 const goNextWeek = async () => {
@@ -996,15 +1006,25 @@ const goNextWeek = async () => {
 
   if (!canGoNext.value) return;
 
-  currentWeekendIndex.value--;
+  loading.value = true;
 
-  weekend.value = pendingWeekends.value[currentWeekendIndex.value];
+  try {
 
-  setWeekendDisplay();
+    currentWeekendIndex.value--;
 
-  buildGrid();
+    weekend.value = pendingWeekends.value[currentWeekendIndex.value];
 
-  await loadWeekHours();
+    setWeekendDisplay();
+
+    buildGrid();
+
+    await loadWeekHours();
+
+  } finally {
+
+    loading.value = false;
+
+  }
 };
 
 let touchStartX = 0;
@@ -1102,6 +1122,7 @@ const handleSwipe = () => {
 }
 
 .grid-list {
+  transition: transform 0.15s ease;
   --ion-item-border-color: var(--ion-color-step-300);
 }
 
