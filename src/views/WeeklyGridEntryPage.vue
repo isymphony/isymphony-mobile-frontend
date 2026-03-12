@@ -117,6 +117,7 @@
                 inputmode="decimal"
                 placeholder="0.00"
                 class="hours-input"
+                @ionFocus="onHoursFocus"
                 @ionBlur="onHoursBlur(d)"
                 /><span class="hrs-label">Hrs</span>
                 <!-- Comment icon -->
@@ -1059,6 +1060,11 @@ const handleSwipe = () => {
   if (swipeDistance > 0 && canGoPrevious.value) {
     goPreviousWeek();
   }
+};
+
+const onHoursFocus = async (ev: any) => {
+  const input = await ev.target.getInputElement();
+  input.select();
 };
 
 </script>
