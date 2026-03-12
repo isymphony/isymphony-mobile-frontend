@@ -1037,15 +1037,23 @@ const editModalStyle = computed(() => {
 }
 
 .comments-input-item {
-  --background: transparent;
-  --border-radius: 10px;
+  --background: var(--ion-item-background);
+  --color: var(--ion-text-color);
+
+  --border-width: 0;
+  --inner-border-width: 0;
+
+  border: 1px solid var(--ion-color-step-300);
+  border-radius: 10px;
+
+  padding: 2px 0;
 }
 
 .comments-input-item ion-textarea {
-  background: var(--ion-item-background, #ffffff);
-  border: 1px solid var(--ion-color-step-200, rgba(0,0,0,0.25));
-  border-radius: 10px;
-  padding: 10px;
+  --padding-start: 0px;
+  --padding-end: 0px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
 }
 
 .editpto-modal {
