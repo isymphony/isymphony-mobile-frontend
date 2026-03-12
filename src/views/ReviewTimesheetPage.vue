@@ -4,7 +4,9 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-back-button default-href="/weekly-grid-entry" text="Back" class="back-button" />
+          <ion-button fill="clear" @click="goBack" class="back-button">
+            <ion-icon slot="start" :icon="arrowBack" />Back
+          </ion-button>
         </ion-buttons>
         <ion-title>Review Timesheet</ion-title>
       </ion-toolbar>
@@ -137,15 +139,15 @@ import {
   IonToolbar,
   IonTitle,
   IonButtons,
-  IonBackButton,
   IonContent,
   IonLoading,
   IonRefresher,
   IonRefresherContent,
   IonButton,
-  IonAlert
+  IonAlert,
+  IonIcon
 } from "@ionic/vue";
-
+import { arrowBack } from "ionicons/icons";
 import { onIonViewWillEnter } from "@ionic/vue";
 import { ref, nextTick, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
@@ -377,6 +379,15 @@ const submitTimesheet = async () => {
   } finally {
     showSubmitting.value = false; // ✅ ALWAYS hide spinner
   }
+};
+
+const goBack = () => {
+  router.push({
+    path: "/weekly-grid-entry",
+    query: {
+      weekend: weekend.value
+    }
+  });
 };
 </script>
 
