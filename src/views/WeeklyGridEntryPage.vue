@@ -1203,7 +1203,7 @@ const onHoursFocus = async (ev: any) => {
 
 /* Bottom */
 .bottom-summary {
-  padding: 16px 8px;
+  padding: 4px 16px 8px 16px;
 }
 .big-total {
   font-size: 16px;
