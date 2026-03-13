@@ -85,7 +85,7 @@
       </div>
 
       <!-- Weekly Grid -->
-      <ion-list class="grid-list">
+      <ion-list class="grid-list" :class="gridAnimation">
         <ion-item
           v-for="d in weekDays"
           :key="d.date"
@@ -354,6 +354,9 @@ const commentDraft = ref("");
 
 const isDirty = ref(false);
 const showUnsavedAlert = ref(false);
+
+const gridAnimation = ref("");
+const isAnimating = ref(false);
 
 const canReviewTimesheet = computed(() => {
   return !isDirty.value;
@@ -969,6 +972,45 @@ const goToReviewTimesheet = () => {
   });
 };
 
+const changeWeek = async (direction: "next" | "prev") => {
+
+  if (isAnimating.value) return;
+
+  isAnimating.value = true;
+
+  if (direction === "next") {
+    gridAnimation.value = "slide-out-left";
+  } else {
+    gridAnimation.value = "slide-out-right";
+  }
+
+  await new Promise(r => setTimeout(r, 220));
+
+  if (direction === "next") {
+    currentWeekendIndex.value--;
+  } else {
+    currentWeekendIndex.value++;
+  }
+
+  weekend.value = pendingWeekends.value[currentWeekendIndex.value];
+
+  setWeekendDisplay();
+
+  buildGrid();
+
+  await loadWeekHours();
+
+  gridAnimation.value = direction === "next"
+    ? "slide-in-right"
+    : "slide-in-left";
+
+  await new Promise(r => setTimeout(r, 30));
+
+  gridAnimation.value = "";
+
+  isAnimating.value = false;
+};
+
 const goPreviousWeek = async () => {
 
   if (isDirty.value) {
@@ -979,23 +1021,10 @@ const goPreviousWeek = async () => {
   if (!canGoPrevious.value) return;
 
   loading.value = true;
-
   try {
-
-    currentWeekendIndex.value++;
-
-    weekend.value = pendingWeekends.value[currentWeekendIndex.value];
-
-    setWeekendDisplay();
-
-    buildGrid();          // reset grid immediately
-
-    await loadWeekHours(); // call API
-
+    await changeWeek("prev");
   } finally {
-
     loading.value = false;
-
   }
 };
 
@@ -1009,23 +1038,10 @@ const goNextWeek = async () => {
   if (!canGoNext.value) return;
 
   loading.value = true;
-
   try {
-
-    currentWeekendIndex.value--;
-
-    weekend.value = pendingWeekends.value[currentWeekendIndex.value];
-
-    setWeekendDisplay();
-
-    buildGrid();
-
-    await loadWeekHours();
-
+    await changeWeek("next");
   } finally {
-
     loading.value = false;
-
   }
 };
 
@@ -1129,6 +1145,7 @@ const onHoursFocus = async (ev: any) => {
 }
 
 .grid-list {
+  will-change: transform;
   transition: transform 0.15s ease;
   --ion-item-border-color: var(--ion-color-step-300);
 }
@@ -1241,6 +1258,33 @@ ion-button[disabled] {
 .week-nav-icon.disabled {
   opacity: 0.3;
   pointer-events: none;
+}
+
+.grid-list {
+  transition: transform 0.25s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* swipe left → next week */
+.slide-out-left {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.slide-in-right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* swipe right → previous week */
+.slide-out-right {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-in-left {
+  transform: translateX(-100%);
+  opacity: 0;
 }
 </style>
 
